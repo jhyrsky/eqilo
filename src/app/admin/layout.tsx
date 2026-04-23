@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase/client";
 import { 
   LayoutDashboard, 
   Package, 
@@ -20,6 +22,12 @@ import { AdminGuard } from "@/components/admin/AdminGuard";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await signOut(auth);
+    router.push("/");
+  }
 
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -102,7 +110,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <p className="text-xs font-bold truncate">Administrator</p>
               <p className="text-[10px] text-muted-foreground truncate">admin@eqilo.fi</p>
             </div>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
