@@ -33,7 +33,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "nav.language": "Kieli",
     "home.hero.title": "Modernit ajanottoratkaisut ammattilaisille",
     "home.hero.subtitle": "Eqilo tuo sveitsiläisen FDS Timing -teknologian suomalaisiin urheilutapahtumiin. Langaton, säänkestävä ja täysin integroitu.",
-    "home.hero.shop": "Osta Laitteita",
+    "home.hero.shop": "Kauppaan",
     "home.hero.services": "Palvelumme",
     "home.partners.title": "Yhteistyössä",
     "home.advantages.title": "FDS Timingin edut",
