@@ -473,7 +473,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "error.not_found_desc": "Utrustningen eller sidan du letar efter kan ha flyttats, tagits bort eller är tillfälligt otillgänglig.",
     "error.need_help": "Behöver du teknisk hjälp med att hitta ett specifikt FDS Timing-system?",
     "home.hero.title": "Moderna tidtagningslösningar för proffs",
-    "home.hero.subtitle": "Eqilo.fi tar schweizisk FDS Timing-teknik till finska agility- och ridklubbar. Trådlöst, väderbeständigt och sömlöst integrerat.",
+    "home.hero.subtitle": "Eqilo tar schweizisk FDS Timing-teknik till sportklubbar. Trådlöst, väderbeständigt och sömlöst integrerat.",
     "home.hero.shop": "Köp Utrustning",
     "home.hero.services": "Våra Tjänster",
     "home.partners.title": "Betrodd av & Officiell partner till",
