@@ -42,7 +42,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "home.advantage.wireless.desc": "Helppo käyttää ja nopea asentaa. Ei häiritseviä kaapeleita kentällä.",
     "home.advantage.battery.title": "Sisäänrakennettu akku",
     "home.advantage.battery.desc": "Moderni ja kompakti teknologia. Ei kömpelöitä ulkoisia akkuja.",
-    "home.advantage.software.title": "Ohjelmistoyhteensopiva",
+    "home.advantage.software.title": "Yhteensopivuus",
     "home.advantage.software.desc": "Suora integraatio suosittuihin tulospalveluihin, kuten Equipeen.",
     "home.advantage.weather.title": "Säänkestävä",
     "home.advantage.weather.desc": "Vankka rakenne takaa luotettavan toiminnan vaativissa olosuhteissa.",
