@@ -165,7 +165,7 @@ export default function ShopContent({ initialProducts }: ShopContentProps) {
                       </>
                     )}
                   </div>
-                  <CardHeader className="p-6 pb-2 flex-1">
+                  <CardHeader className="p-6 pb-2">
                     <div className="flex justify-between items-start gap-2 mb-3">
                       <p className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/5 px-2 py-1 rounded-md border border-primary/10">
                         {t(`category.${product.category_id}`) !== `category.${product.category_id}` ? t(`category.${product.category_id}`) : product.category_id.replace(/-/g, ' ')}
