@@ -12,7 +12,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
   FI: {
     "nav.products": "Tuotteet",
     "nav.services": "Palvelut",
-    "nav.consulting": "Eqilo Konsultointi",
+    "nav.consulting": "Eqilo",
     "nav.training": "Koulutus & Tulospalvelu",
     "nav.equipe": "Equipe",
     "nav.cart": "Ostoskori",
