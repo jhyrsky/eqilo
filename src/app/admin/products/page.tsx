@@ -22,7 +22,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from "@/components/ui/sheet";
-import { Plus, Pencil, Trash2, Search, ExternalLink, PackageOpen } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, ExternalLink, PackageOpen, ChevronsUpDown, ChevronUp, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -35,6 +35,8 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [sortKey, setSortKey] = useState<"name" | "category_id" | "price" | "inventory_count" | "is_active">("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   async function loadData() {
     setLoading(true);
@@ -55,10 +57,38 @@ export default function AdminProductsPage() {
     loadData();
   }, []);
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    p.sku.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  function handleSort(key: typeof sortKey) {
+    if (sortKey === key) {
+      setSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  }
+
+  function SortIcon({ col }: { col: typeof sortKey }) {
+    if (sortKey !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 inline opacity-40" />;
+    return sortDir === "asc"
+      ? <ChevronUp className="ml-1 h-3 w-3 inline" />
+      : <ChevronDown className="ml-1 h-3 w-3 inline" />;
+  }
+
+  const filteredProducts = products
+    .filter(p =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.sku.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      let av: string | number = a[sortKey] as string | number;
+      let bv: string | number = b[sortKey] as string | number;
+      if (typeof av === "boolean") av = av ? 1 : 0;
+      if (typeof bv === "boolean") bv = bv ? 1 : 0;
+      if (typeof av === "string") av = av.toLowerCase();
+      if (typeof bv === "string") bv = bv.toLowerCase();
+      if (av < bv) return sortDir === "asc" ? -1 : 1;
+      if (av > bv) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this product permanently?")) return;
@@ -124,11 +154,21 @@ export default function AdminProductsPage() {
         <Table>
           <TableHeader className="bg-muted/50">
             <TableRow>
-              <TableHead className="font-bold">Product</TableHead>
-              <TableHead className="font-bold">Category</TableHead>
-              <TableHead className="text-right font-bold">Price</TableHead>
-              <TableHead className="text-right font-bold">Stock</TableHead>
-              <TableHead className="text-center font-bold">Status</TableHead>
+              <TableHead className="font-bold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort("name")}>
+                Product<SortIcon col="name" />
+              </TableHead>
+              <TableHead className="font-bold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort("category_id")}>
+                Category<SortIcon col="category_id" />
+              </TableHead>
+              <TableHead className="text-right font-bold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort("price")}>
+                Price<SortIcon col="price" />
+              </TableHead>
+              <TableHead className="text-right font-bold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort("inventory_count")}>
+                Stock<SortIcon col="inventory_count" />
+              </TableHead>
+              <TableHead className="text-center font-bold cursor-pointer select-none hover:text-foreground" onClick={() => handleSort("is_active")}>
+                Status<SortIcon col="is_active" />
+              </TableHead>
               <TableHead className="text-right font-bold">Actions</TableHead>
             </TableRow>
           </TableHeader>
