@@ -27,7 +27,11 @@ service cloud.firestore {
 
     // Customers: User can read/write their own profile, Admin can read/write all
     match /customers/{customerId} {
-      allow read: if isAuthenticated() && (request.auth.uid == customerId || isAdmin());
+      allow read: if isAuthenticated() && (
+        request.auth.uid == customerId ||
+        resource.data.email == request.auth.token.email ||
+        isAdmin()
+      );
       allow write: if isAdmin(); // User creation is handled by secure backend actions
     }
 
