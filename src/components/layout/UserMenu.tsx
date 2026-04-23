@@ -26,7 +26,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -145,7 +144,7 @@ export function UserMenu() {
             </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64 p-2 shadow-lg border border-primary/10" align="end">
-          <DropdownMenuLabel className="font-normal p-2">
+          <div className="font-normal p-2">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-bold leading-none text-foreground flex items-center gap-2">
                 {t("nav.profile")} <ShieldCheck className="w-3 h-3 text-primary" />
@@ -154,7 +153,7 @@ export function UserMenu() {
                 {user.email || user.phoneNumber}
               </p>
             </div>
-          </DropdownMenuLabel>
+          </div>
           <DropdownMenuSeparator className="opacity-50" />
           <DropdownMenuItem onClick={() => router.push("/admin")} className="font-medium p-2 cursor-pointer">
             <LayoutDashboard className="mr-3 h-4 w-4 text-muted-foreground" />
