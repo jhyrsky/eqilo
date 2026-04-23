@@ -23,7 +23,7 @@ export default function TermsPage() {
 
         <section className="mb-12">
           <h2 className="text-2xl font-bold">3. Toimitus</h2>
-          <p>Toimitamme tuotteita pääsääntöisesti Suomeen. Vakiotoimitusaika FDS Timing -laitteille on 1-2 viikkoa. Toimitusmaksu on 20 € alle 200 € tilauksille, ja ilmainen yli 200 € tilauksille.</p>
+          <p>Toimitamme tuotteita pääsääntöisesti Suomeen. Vakiotoimitusaika FDS Timing -laitteille on 1-2 viikkoa. Arvioitu toimitusmaksu on 20 € alle 200 € tilauksille, ja ilmainen yli 200 € tilauksille.</p>
         </section>
 
         <section className="mb-12">
