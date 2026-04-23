@@ -42,7 +42,6 @@ const nextConfig: NextConfig = {
     // Enable optimizing package imports to reduce bundle size and INP
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
-  serverExternalPackages: ['pdfmake'],
 };
 
 export default nextConfig;

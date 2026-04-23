@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, Loader2, Download } from "lucide-react";
+import { FileText, Loader2, Send } from "lucide-react";
 import { useCart } from "@/components/cart-provider";
 import { generateQuote } from "@/lib/actions/quotes";
 import { toast } from "sonner";
@@ -41,21 +41,12 @@ export function QuoteDialog() {
     setLoading(true);
     try {
       const res = await generateQuote(items, details);
-      
-      if (res.success && res.pdf) {
-        toast.success("Quote generated and emailed!");
-        
-        // Trigger download
-        const linkSource = `data:application/pdf;base64,${res.pdf}`;
-        const downloadLink = document.createElement("a");
-        const fileName = `Eqilo_Quote_${details.name.replace(/[^a-z0-9]/gi, "_")}.pdf`;
-        downloadLink.href = linkSource;
-        downloadLink.download = fileName;
-        downloadLink.click();
-        
+
+      if (res.success) {
+        toast.success("Quote sent to your email!");
         setIsOpen(false);
       } else {
-        toast.error(res.error || "Failed to generate quote");
+        toast.error(res.error || "Failed to send quote");
       }
     } catch (err) {
       console.error("Quote generation exception:", err);
@@ -130,7 +121,7 @@ export function QuoteDialog() {
                 </>
               ) : (
                 <>
-                  <Download className="mr-2 h-4 w-4" />
+                  <Send className="mr-2 h-4 w-4" />
                   {t("quote.download_button")}
                 </>
               )}
