@@ -183,7 +183,8 @@ export async function upsertProduct(id: string | null, data: Partial<Product>) {
     revalidatePath("/admin/products");
     revalidatePath("/shop");
     revalidatePath("/");
-    revalidateTag("products");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (revalidateTag as any)("products");
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -198,7 +199,8 @@ export async function deleteProduct(id: string) {
     revalidatePath("/admin/products");
     revalidatePath("/shop");
     revalidatePath("/");
-    revalidateTag("products");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (revalidateTag as any)("products");
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
