@@ -29,7 +29,7 @@ export function SEOContent() {
     <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none mt-20 pt-10 border-t border-border/50 text-muted-foreground">
       <p className="mb-4">Accurate timekeeping is only half of a successful results service; the other half consists of competent staff. Eqilo Oy's training and results service solutions aim to ensure that clubs and event organizers can operate professional systems independently and confidently.</p>
       <p className="mb-4">Our training programs cover both the physical installation of FDS Timing equipment and the use of the Equipe APP software. Our experienced experts guide you hand-in-hand through the entire process, from connecting the devices to configuring complex competition rules. We also provide on-site results service support for the largest events, ensuring their smooth operation.</p>
-      <p className="mb-4">Eqilo's goal is to raise the standard of Finnish sports events. By providing first-class training and support, we ensure that technology acts as a servant, not a master. Contact us, and let's design a training or service package tailored to your exact needs.</p>
+      <p className="mb-4">Eqilo's goal is to raise the standard of sports events. By providing first-class training and support, we ensure that technology acts as a servant, not a master. Contact us, and let's design a training or service package tailored to your exact needs.</p>
     </div>
   );
 }
