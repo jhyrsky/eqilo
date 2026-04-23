@@ -211,7 +211,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "footer.terms": "Käyttöehdot",
     "footer.business_id": "Y-Tunnus",
     "footer.rights": "Kaikki oikeudet pidätetään.",
-    "footer.company_desc": "Modernit ajanottolaitteet sveitsiläiseltä FDS Timingilta. Eqilo tarjoaa yli 20 vuoden asiantuntemusta suomalaisille agility- ja ratsastusseuroille.",
+    "footer.company_desc": "Modernit ajanottolaitteet sveitsiläiseltä FDS Timingilta. Eqilo tarjoaa yli 20 vuoden asiantuntemusta suomalaisille urheiluseuroille.",
     "cookie.title": "Yksityisyytesi on meille tärkeää",
     "cookie.desc": "Käytämme evästeitä parantaaksemme sivuston käyttökokemusta, tarjotaksemme kohdennettua sisältöä ja analysoidaksemme liikennettä.",
     "cookie.accept": "Hyväksy kaikki",
