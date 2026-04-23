@@ -4,7 +4,7 @@ import { useAuth } from "@/components/auth-provider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase/client";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { ShieldAlert, Loader2, LogOut, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "firebase/auth";
@@ -25,12 +25,22 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
       }
 
       try {
+        // Primary lookup: by Firebase UID (document ID)
         const userDoc = await getDoc(doc(db, "customers", user.uid));
         if (userDoc.exists() && userDoc.data().role === "admin") {
           setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
+          return;
         }
+        // Fallback: look up by email (handles mismatched UIDs from different auth methods)
+        if (user.email) {
+          const q = query(collection(db, "customers"), where("email", "==", user.email), where("role", "==", "admin"));
+          const snap = await getDocs(q);
+          if (!snap.empty) {
+            setIsAdmin(true);
+            return;
+          }
+        }
+        setIsAdmin(false);
       } catch (e) {
         console.error("Failed to verify admin status", e);
         setIsAdmin(false);
