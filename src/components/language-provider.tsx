@@ -709,8 +709,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return dictionaries[lang][key] || dictionaries["EN"][key] || key;
   };
 
-  if (!mounted) return <>{children}</>;
-
   return (
     <LanguageContext.Provider value={{ lang, setLang: handleSetLang, t }}>
       {children}
