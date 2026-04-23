@@ -182,7 +182,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "services.training_full": "Haluamme olla mukana varmistamassa onnistuneen tapahtumasi. Olipa kyseessä pienempi paikallinen kilpailu tai suuri kansainvälinen tapahtuma, toimivat järjestelmät varmistavat, että kaikki saadaan menestyksekkäästi läpivietyä.",
     "services.feature.on_site": "Henkilökunnan koulutus paikan päällä",
     "services.feature.setup": "Laitteiston asennus ja käyttöönotto",
-    "services.feature.live": "Live-tulospalvelun hallinta",
+    "services.feature.live": "Live-tulokset",
     "services.feature.bridge": "Ohjelmisto-laitteisto -silta",
     "services.feature.auto": "Automatisoidut ajanottosyötteet",
     "services.feature.config": "Mukautetut kilpailuasetukset",
