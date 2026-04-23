@@ -109,10 +109,28 @@ export async function importProducts(formData: FormData) {
 
     const batch = adminDb.batch();
     const productsRef = adminDb.collection("products");
-    
+    const categoriesRef = adminDb.collection("categories");
+
+    // Collect unique categories seen in this import
+    const seenCategories = new Map<string, string>(); // slug -> display name
+    products.forEach((product) => {
+      if (product.category_id && !seenCategories.has(product.category_id)) {
+        // Reconstruct display name from slug (title-case each word)
+        const displayName = (product.category_id as string)
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, c => c.toUpperCase());
+        seenCategories.set(product.category_id as string, displayName);
+      }
+    });
+
     products.forEach((product) => {
       const docRef = productsRef.doc(product.id as string);
       batch.set(docRef, product, { merge: true });
+    });
+
+    seenCategories.forEach((name, slug) => {
+      const catRef = categoriesRef.doc(slug);
+      batch.set(catRef, { id: slug, name, slug }, { merge: true });
     });
 
     await batch.commit();
@@ -227,5 +245,37 @@ export async function deleteCategory(id: string) {
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
+export async function syncCategoriesFromProducts() {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const snapshot = await adminDb.collection("products").get();
+    const seen = new Map<string, string>();
+
+    snapshot.docs.forEach(doc => {
+      const slug = doc.data().category_id as string;
+      if (slug && !seen.has(slug)) {
+        const name = slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        seen.set(slug, name);
+      }
+    });
+
+    const batch = adminDb.batch();
+    const categoriesRef = adminDb.collection("categories");
+    seen.forEach((name, slug) => {
+      batch.set(categoriesRef.doc(slug), { id: slug, name, slug }, { merge: true });
+    });
+    await batch.commit();
+
+    revalidatePath("/admin/categories");
+    revalidatePath("/shop");
+    revalidatePath("/");
+    return { success: true, count: seen.size };
+  } catch (error: any) {
+    return { success: false, error: error.message };
   }
 }

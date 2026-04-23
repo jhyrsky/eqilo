@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Category } from "@/lib/types/firestore";
-import { getCategories, upsertCategory, deleteCategory } from "@/lib/actions/admin";
+import { getCategories, upsertCategory, deleteCategory, syncCategoriesFromProducts } from "@/lib/actions/admin";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -24,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CategoriesAdminPage() {
@@ -33,12 +33,19 @@ export default function CategoriesAdminPage() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   async function loadCategories() {
     setLoading(true);
-    const data = await getCategories();
-    setCategories(data);
-    setLoading(false);
+    try {
+      const data = await getCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error("Failed to load categories:", error);
+      toast.error("Failed to load categories. Check console for details.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -67,6 +74,18 @@ export default function CategoriesAdminPage() {
     setIsSubmitting(false);
   }
 
+  async function handleSync() {
+    setIsSyncing(true);
+    const res = await syncCategoriesFromProducts();
+    if (res.success) {
+      toast.success(`Synced ${res.count} categories from products`);
+      loadCategories();
+    } else {
+      toast.error(res.error || "Failed to sync categories");
+    }
+    setIsSyncing(false);
+  }
+
   async function handleDelete(id: string) {
     if (!confirm("Are you sure you want to delete this category?")) return;
     const res = await deleteCategory(id);
@@ -82,6 +101,11 @@ export default function CategoriesAdminPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={handleSync} disabled={isSyncing}>
+            {isSyncing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+            Sync from Products
+          </Button>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger render={<Button onClick={() => setEditingCategory(null)} />}>
             <Plus className="mr-2 h-4 w-4" /> Add Category
@@ -135,6 +159,7 @@ export default function CategoriesAdminPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="rounded-md border">
