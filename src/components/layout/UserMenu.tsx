@@ -9,7 +9,8 @@ import {
   signInWithPhoneNumber,
   ConfirmationResult
 } from "firebase/auth";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { 
   User, 
   LogOut, 
@@ -41,12 +42,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
 import { useLanguage } from "@/components/language-provider";
 
 export function UserMenu() {
   const { user, loading } = useAuth();
   const { t } = useLanguage();
+  const router = useRouter();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -155,17 +156,13 @@ export function UserMenu() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="opacity-50" />
-          <DropdownMenuItem className="p-0 focus:bg-primary/5">
-            <Link href="/admin" className="flex items-center w-full font-medium p-2 cursor-pointer">
-              <LayoutDashboard className="mr-3 h-4 w-4 text-muted-foreground" />
-              <span>{t("nav.admin")}</span>
-            </Link>
+          <DropdownMenuItem onClick={() => router.push("/admin")} className="font-medium p-2 cursor-pointer">
+            <LayoutDashboard className="mr-3 h-4 w-4 text-muted-foreground" />
+            <span>{t("nav.admin")}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="p-0 focus:bg-primary/5">
-            <Link href="/orders" className="flex items-center w-full font-medium p-2 cursor-pointer">
-              <Settings className="mr-3 h-4 w-4 text-muted-foreground" />
-              <span>{t("nav.my_orders")}</span>
-            </Link>
+          <DropdownMenuItem onClick={() => router.push("/orders")} className="font-medium p-2 cursor-pointer">
+            <Settings className="mr-3 h-4 w-4 text-muted-foreground" />
+            <span>{t("nav.my_orders")}</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="opacity-50" />
           <DropdownMenuItem onClick={handleSignOut} className="p-2 text-destructive focus:text-destructive focus:bg-destructive/5 cursor-pointer font-bold">
