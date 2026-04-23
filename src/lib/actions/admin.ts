@@ -21,27 +21,30 @@ async function checkAdmin() {
     const cookieStore = await cookies();
     const idToken = cookieStore.get("idToken")?.value;
 
-    if (!idToken) return false;
+    if (!idToken) { console.log("[checkAdmin] No idToken cookie"); return false; }
 
     const decodedToken = await adminAuth.verifyIdToken(idToken);
+    console.log(`[checkAdmin] UID=${decodedToken.uid} email=${decodedToken.email}`);
 
     // Primary: look up by UID
     const userDoc = await adminDb.collection("customers").doc(decodedToken.uid).get();
+    console.log(`[checkAdmin] UID lookup exists=${userDoc.exists} role=${userDoc.data()?.role}`);
     if (userDoc.exists && userDoc.data()?.role === "admin") return true;
 
-    // Fallback: look up by email (handles mismatched UIDs from different auth methods)
+    // Fallback: look up by email
     if (decodedToken.email) {
       const snap = await adminDb.collection("customers")
         .where("email", "==", decodedToken.email)
         .where("role", "==", "admin")
         .limit(1)
         .get();
+      console.log(`[checkAdmin] Email lookup empty=${snap.empty}`);
       if (!snap.empty) return true;
     }
 
     return false;
   } catch (error) {
-    console.error("Auth Check Failed:", error);
+    console.error("[checkAdmin] Error:", error);
     return false;
   }
 }
