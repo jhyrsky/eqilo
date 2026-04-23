@@ -38,10 +38,16 @@ export default function AdminProductsPage() {
 
   async function loadData() {
     setLoading(true);
-    const [pData, cData] = await Promise.all([getProducts(), getCategories()]);
-    setProducts(pData);
-    setCategories(cData);
-    setLoading(false);
+    try {
+      const [pData, cData] = await Promise.all([getProducts(), getCategories()]);
+      setProducts(pData);
+      setCategories(cData);
+    } catch (error) {
+      console.error("Failed to load admin data:", error);
+      toast.error("Failed to load product catalog. Check console for details.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
