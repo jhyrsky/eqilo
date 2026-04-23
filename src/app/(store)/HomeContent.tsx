@@ -21,6 +21,21 @@ export default function HomeContent({ featuredProducts }: HomeContentProps) {
     Autoplay({ delay: 4000, stopOnInteraction: true })
   );
 
+  const galleryPhotos = [
+    { src: "/events/agility-dog-jump-finland.jpg", alt: "Agility-kilpailu Suomessa – koira hyppää esteen yli" },
+    { src: "/events/agility-stadium-finland.jpg", alt: "Agility-kilpailu stadionilla Suomessa" },
+    { src: "/events/equestrian-outdoor-spring-finland.jpg", alt: "Ratsastuskenttä keväällä Suomessa" },
+    { src: "/events/equestrian-outdoor-summer-finland.jpg", alt: "Ratsastuskilpailu kesällä Suomessa" },
+    { src: "/events/equestrian-indoor-ypaja-finland.jpg", alt: "Ypäjän Hevosopisto sisähalli – ratsastuskilpailu" },
+    { src: "/events/equestrian-indoor-arena-scoreboard.jpg", alt: "Ratsastushalli FDS-tulosnäytöllä" },
+    { src: "/events/fds-wirc-asyad-oman.jpg", alt: "FDS WIRC -ajanottolaitteisto Omanissa" },
+    { src: "/events/horse-park-tour-night-saudi.jpg", alt: "Horse Park Tour Saudi-Arabia – yökilpailu" },
+    { src: "/events/fds-timing-sea-games-2025.jpg", alt: "FDS Timing – Kaakkois-Aasian kisat 2025 Thaimaassa" },
+    { src: "/events/young-riders-fds-timing.jpg", alt: "Nuoret ratsastajat tutustumassa FDS-ajanottolaitteeseen" },
+    { src: "/events/equestrian-outdoor-fds-tripod-finland.jpg", alt: "FDS-jalusta ratsastustapahtumassa Suomessa" },
+    { src: "/events/fds-wirc-thailand-equestrian.jpg", alt: "FDS WIRC -laite Thaimaan ratsastusliigan tapahtumassa" },
+  ];
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -208,6 +223,24 @@ export default function HomeContent({ featuredProducts }: HomeContentProps) {
               </Link>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Photo Strip */}
+      <section className="w-full py-10 md:py-14 bg-background border-y overflow-hidden">
+        <div className="container px-4 md:px-6 mb-6">
+          <p className="text-center text-[10px] xs:text-xs md:text-sm font-bold text-muted-foreground uppercase tracking-[0.3em]">
+            {t("home.gallery.label")}
+          </p>
+        </div>
+        <div className="relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+          <div className="flex gap-3 md:gap-4 animate-marquee shrink-0">
+            {galleryPhotos.concat(galleryPhotos).map((photo, i) => (
+              <div key={i} className="relative h-44 xs:h-52 md:h-64 w-64 xs:w-72 md:w-96 shrink-0 rounded-xl overflow-hidden shadow-md">
+                <Image src={photo.src} alt={photo.alt} fill className="object-cover hover:scale-105 transition-transform duration-700" sizes="(max-width: 475px) 256px, (max-width: 768px) 288px, 384px" />
+              </div>
+            ))}
           </div>
         </div>
       </section>

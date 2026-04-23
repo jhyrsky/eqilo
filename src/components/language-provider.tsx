@@ -223,6 +223,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "whatsapp.scan_desc": "Avaa WhatsApp skannaamalla koodi puhelimellasi.",
     "whatsapp.web_link": "Tai klikkaa tästä WhatsApp Webiin",
     "whatsapp.ask_johannes": "Kysy Johannekselta",
+    "home.gallery.label": "Tapahtumia ympäri maailman",
   },
   EN: {
     "nav.products": "Products",
@@ -441,6 +442,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "whatsapp.scan_desc": "Scan with your phone to open WhatsApp.",
     "whatsapp.web_link": "Or click here for WhatsApp Web",
     "whatsapp.ask_johannes": "Ask Johannes",
+    "home.gallery.label": "Events Around The World",
   },
   SE: {
     "nav.products": "Produkter",
@@ -662,6 +664,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "whatsapp.scan_desc": "Skanna koden med din telefon för att öppna WhatsApp.",
     "whatsapp.web_link": "Eller klicka här för WhatsApp Web",
     "whatsapp.ask_johannes": "Fråga Johannes",
+    "home.gallery.label": "Evenemang runt om i världen",
   }
 };
 
