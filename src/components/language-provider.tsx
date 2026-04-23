@@ -58,7 +58,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "home.services.expert_desc": "Johannes Hyrsky ja Eqilon tiimi ovat valmiina auttamaan.",
     "home.quote.text": "\"Tavoitteemme on parantaa nykyaikaisten ajanottoratkaisujen saatavuutta Suomessa ja tarjota kustannustehokkaita ratkaisuja seurojen käyttöön.\"",
     "home.quote.author": "Johannes Hyrsky",
-    "home.quote.role": "Kauppias & Asiantuntija",
+    "home.quote.role": "Tulospalvelu asiantuntija",
     "shop.all_equipment": "Kaikki Laitteet",
     "shop.categories": "Kategoriat",
     "shop.view_details": "Katso Tiedot",
