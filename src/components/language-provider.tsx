@@ -240,6 +240,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "nav.terms": "Terms & Conditions",
     "nav.privacy": "Privacy Policy",
     "nav.cookie": "Cookie Policy",
+    "nav.sports": "Sports",
     "nav.contact_us": "Contact Us",
     "nav.consulting_desc": "20+ years of expertise in competition and timekeeping systems.",
     "nav.training_desc": "On-site operations and staff training.",
