@@ -179,7 +179,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "services.equipe_desc_short": "Equestrian kilpailujen hallinnan asiantuntijat.",
     "services.training_desc_short": "Opastus ja konsultointi.",
     "services.equipe_full": "Hevosurheilutapahtumien asiantuntijoina tarjoamme täydellisen integraation, asennuksen ja tuen Equipe-ohjelmistoon. Yhdistämme FDS Timing -laitteistosi suoraan digitaaliseen tulostauluun.",
-    "services.training_full": "Tarjoamme syvällistä ja käytännönläheistä tukea tapahtumillesi. Olipa kyseessä paikallinen seuran kilpailu tai suuri kansainvälinen turnaus, kenttäkoulutuksemme varmistaa, että henkilökuntasi on itsevarma ja tulokset virheettömiä.",
+    "services.training_full": "Haluamme olla mukana varmistamassa onnistuneen tapahtumasi. Olipa kyseessä pienempi paikallinen kilpailu tai suuri kansainvälinen tapahtuma, toimivat järjestelmät varmistavat, että kaikki saadaan menestyksekkäästi läpivietyä.",
     "services.feature.on_site": "Henkilökunnan koulutus paikan päällä",
     "services.feature.setup": "Laitteiston asennus ja purku",
     "services.feature.live": "Live-tulospalvelun hallinta",
