@@ -8,8 +8,8 @@ export function SEOContent() {
   if (lang === "FI") {
     return (
       <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none mt-20 pt-10 border-t border-border/50 text-muted-foreground">
-        <p className="mb-4">Tämä FDS Timing -tuote on osoitus sveitsiläisestä insinööritaidosta, jossa yhdistyvät äärimmäinen tarkkuus ja luotettavuus. Suunniteltu kestämään kovaa käyttöä ja vaihtelevia sääolosuhteita, se on luotettava valinta ammattilaistason ajanottoon ja tulospalveluun.</p>
-        <p className="mb-4">Yhteensopivuus alan standardiohjelmistojen, kuten Equipe APP:n, kanssa takaa saumattoman integraation ja tehokkaan kilpailun läpiviennin. Eqilo Oy tarjoaa täyden tuen ja opastuksen tuotteen käyttöönotossa, varmistaen parhaan mahdollisen käyttökokemuksen.</p>
+        <p className="mb-4">FDS Timing -tuotteet ovat osoitus sveitsiläisestä insinööritaidosta, jossa yhdistyvät äärimmäinen tarkkuus ja luotettavuus. Ne on suunniteltu kestämään kovaa käyttöä ja vaihtelevia sääolosuhteita ja luotettava valinta ammattilaistason ajanottoon ja tulospalveluun.</p>
+        <p className="mb-4">Yhteensopivuus alan standardiohjelmistojen, kuten Equipe APP:n, kanssa takaa saumattoman integraation ja tehokkaan kilpailun läpiviennin. Eqilo tarjoaa tuen ja opastuksen tuotteen käyttöönotossa, varmistaen parhaan mahdollisen käyttökokemuksen.</p>
       </div>
     );
   }
