@@ -102,11 +102,13 @@ export async function importProducts(formData: FormData) {
 
 export async function getProducts(): Promise<Product[]> {
   try {
+    console.log('[getProducts] Fetching from Firestore...');
     const snapshot = await adminDb.collection("products").get();
+    console.log(`[getProducts] Got ${snapshot.docs.length} products`);
     return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as Product);
   } catch (error) {
-    console.error("Error fetching products:", error);
-    return [];
+    console.error("[getProducts] Error:", error);
+    throw error;
   }
 }
 
