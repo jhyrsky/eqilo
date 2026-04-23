@@ -3,7 +3,7 @@ import { adminDb, adminAuth } from "../firebase/admin";
 import * as xlsx from "xlsx";
 import { Product, Category } from "../types/firestore";
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 function serializeDoc(data: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(
@@ -164,6 +164,8 @@ export async function upsertProduct(id: string | null, data: Partial<Product>) {
     }
     revalidatePath("/admin/products");
     revalidatePath("/shop");
+    revalidatePath("/");
+    revalidateTag("products");
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -177,6 +179,8 @@ export async function deleteProduct(id: string) {
     await adminDb.collection("products").doc(id).delete();
     revalidatePath("/admin/products");
     revalidatePath("/shop");
+    revalidatePath("/");
+    revalidateTag("products");
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
