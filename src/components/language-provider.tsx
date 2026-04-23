@@ -223,7 +223,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "whatsapp.scan_desc": "Avaa WhatsApp skannaamalla koodi puhelimellasi.",
     "whatsapp.web_link": "Tai klikkaa tästä WhatsApp Webiin",
     "whatsapp.ask_johannes": "Kysy Johannekselta",
-    "home.gallery.label": "Tapahtumia ympäri maailman",
+    "home.gallery.label": "Luotettu kumppani",
   },
   EN: {
     "nav.products": "Products",
