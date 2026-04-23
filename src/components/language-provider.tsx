@@ -56,7 +56,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "home.services.button": "Tutustu palveluihimme",
     "home.services.expert_cta": "Tarvitsetko asiantuntijaa tapahtumaasi?",
     "home.services.expert_desc": "Johannes Hyrsky ja Eqilon tiimi ovat valmiina auttamaan.",
-    "home.quote.text": "\"Tavoitteemme on parantaa nykyaikaisten ajanottoratkaisujen saatavuutta Suomessa ja madaltaa seurojen kynnystä ammattiteknologian käyttöön.\"",
+    "home.quote.text": "\"Tavoitteemme on parantaa nykyaikaisten ajanottoratkaisujen saatavuutta Suomessa ja tarjota kustannustehokkaita ratkaisuja seurojen käyttöön.\"",
     "home.quote.author": "Johannes Hyrsky",
     "home.quote.role": "Kauppias & Asiantuntija",
     "shop.all_equipment": "Kaikki Laitteet",
