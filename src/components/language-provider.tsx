@@ -497,7 +497,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "home.services.button": "Upptäck våra tjänster",
     "home.services.expert_cta": "Behöver du en expert till ditt evenemang?",
     "home.services.expert_desc": "Johannes Hyrsky och Eqilo-teamet är redo att hjälpa till.",
-    "home.quote.text": "\"Vårt mål är att avsevärt förbättra tillgången till moderna tidtagningslösningar i Finland och sänka tröskeln för klubbar att använda professionell teknik.\"",
+    "home.quote.text": "\"Vårt mål är att avsevärt förbättra tillgången till moderna tidtagningslösningar och sänka tröskeln för klubbar att använda professionell teknik.\"",
     "home.quote.author": "Johannes Hyrsky",
     "home.quote.role": "Butiksägare & Expert",
     "shop.all_equipment": "All Utrustning",
