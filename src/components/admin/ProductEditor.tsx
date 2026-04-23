@@ -38,6 +38,7 @@ const productSchema = z.object({
   inventory_count: z.coerce.number().int().min(0),
   category_id: z.string().min(1, "Please select a category"),
   is_active: z.boolean(),
+  is_featured: z.boolean(),
   description: z.string().min(1, "Description is required"),
   description_fi: z.string().optional(),
   description_se: z.string().optional(),
@@ -65,6 +66,7 @@ export function ProductEditor({ product, categories, onSuccess, onCancel }: Prod
       inventory_count: product?.inventory_count || 0,
       category_id: product?.category_id || "",
       is_active: product?.is_active ?? true,
+      is_featured: product?.is_featured ?? false,
       description: product?.description || "",
       description_fi: product?.description_fi || "",
       description_se: product?.description_se || "",
@@ -200,6 +202,26 @@ export function ProductEditor({ product, categories, onSuccess, onCancel }: Prod
                   <FormLabel className="text-base">Active</FormLabel>
                   <FormDescription>
                     Visibility in the store.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={!!field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="is_featured"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Featured</FormLabel>
+                  <FormDescription>
+                    Show in homepage carousel.
                   </FormDescription>
                 </div>
                 <FormControl>

@@ -9,9 +9,10 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const all = await getProductsServer();
-  const featuredProducts = all
-    .filter(p => p.image_urls && p.image_urls.length > 0)
-    .slice(0, 6);
+  const featured = all.filter(p => p.is_featured && p.image_urls && p.image_urls.length > 0);
+  const featuredProducts = featured.length > 0
+    ? featured
+    : all.filter(p => p.image_urls && p.image_urls.length > 0).slice(0, 6);
 
   return <HomeContent featuredProducts={JSON.parse(JSON.stringify(featuredProducts))} />;
 }

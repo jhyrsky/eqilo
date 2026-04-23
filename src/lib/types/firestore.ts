@@ -52,6 +52,7 @@ export interface Product {
   excel_ref_id?: string; // Original ID from Price List Excel
   inventory_count: number;
   is_active: boolean; // Allows drafting or hiding products
+  is_featured?: boolean; // Shows product in homepage carousel
   weight?: number; // Essential for shipping calculation
   dimensions?: ProductDimensions;
   image_urls: string[];
