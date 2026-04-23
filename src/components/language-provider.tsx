@@ -181,7 +181,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "services.equipe_full": "Hevosurheilutapahtumien asiantuntijoina tarjoamme täydellisen integraation, asennuksen ja tuen Equipe-ohjelmistoon. Yhdistämme FDS Timing -laitteistosi suoraan digitaaliseen tulostauluun.",
     "services.training_full": "Haluamme olla mukana varmistamassa onnistuneen tapahtumasi. Olipa kyseessä pienempi paikallinen kilpailu tai suuri kansainvälinen tapahtuma, toimivat järjestelmät varmistavat, että kaikki saadaan menestyksekkäästi läpivietyä.",
     "services.feature.on_site": "Henkilökunnan koulutus paikan päällä",
-    "services.feature.setup": "Laitteiston asennus ja purku",
+    "services.feature.setup": "Laitteiston asennus ja käyttöönotto",
     "services.feature.live": "Live-tulospalvelun hallinta",
     "services.feature.bridge": "Ohjelmisto-laitteisto -silta",
     "services.feature.auto": "Automatisoidut ajanottosyötteet",
