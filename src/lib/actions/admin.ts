@@ -5,6 +5,17 @@ import { Product, Category } from "../types/firestore";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+function serializeDoc(data: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(data).map(([key, value]) => {
+      if (value && typeof (value as any).toDate === 'function') {
+        return [key, (value as any).toDate().toISOString()];
+      }
+      return [key, value];
+    })
+  );
+}
+
 async function checkAdmin() {
   try {
     const cookieStore = await cookies();
@@ -105,7 +116,7 @@ export async function getProducts(): Promise<Product[]> {
     console.log('[getProducts] Fetching from Firestore...');
     const snapshot = await adminDb.collection("products").get();
     console.log(`[getProducts] Got ${snapshot.docs.length} products`);
-    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as Product);
+    return snapshot.docs.map(doc => ({ ...serializeDoc(doc.data()), id: doc.id }) as Product);
   } catch (error) {
     console.error("[getProducts] Error:", error);
     throw error;
@@ -164,7 +175,7 @@ export async function deleteProduct(id: string) {
 export async function getCategories(): Promise<Category[]> {
   try {
     const snapshot = await adminDb.collection("categories").get();
-    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as Category);
+    return snapshot.docs.map(doc => ({ ...serializeDoc(doc.data()), id: doc.id }) as Category);
   } catch (error) {
     console.error("Error fetching categories:", error);
     return [];
