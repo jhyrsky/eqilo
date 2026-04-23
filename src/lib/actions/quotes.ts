@@ -154,6 +154,7 @@ export async function generateQuote(
           await resend.emails.send({
             from: "Eqilo.fi <quotes@eqilo.fi>",
             to: [orgDetails.email],
+            bcc: ["tarjoukset@eqilo.fi"],
             subject: `Equipment Quote - ${orgDetails.name}`,
             text: "Please find your requested equipment quote attached.",
             attachments: [
