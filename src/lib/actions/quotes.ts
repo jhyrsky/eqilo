@@ -48,8 +48,8 @@ export async function generateQuote(
 
     // 2. Define PDF Document
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const PdfPrinter = require("pdfmake/js/Printer").default;
-    const printer = new PdfPrinter(fonts);
+    const PdfPrinter = require("pdfmake");
+    const printer = new (PdfPrinter.default ?? PdfPrinter)(fonts);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const docDefinition: any = {
