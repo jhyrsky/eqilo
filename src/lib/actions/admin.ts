@@ -24,9 +24,22 @@ async function checkAdmin() {
     if (!idToken) return false;
 
     const decodedToken = await adminAuth.verifyIdToken(idToken);
-    const userDoc = await adminDb.collection("customers").doc(decodedToken.uid).get();
 
-    return userDoc.exists && userDoc.data()?.role === "admin";
+    // Primary: look up by UID
+    const userDoc = await adminDb.collection("customers").doc(decodedToken.uid).get();
+    if (userDoc.exists && userDoc.data()?.role === "admin") return true;
+
+    // Fallback: look up by email (handles mismatched UIDs from different auth methods)
+    if (decodedToken.email) {
+      const snap = await adminDb.collection("customers")
+        .where("email", "==", decodedToken.email)
+        .where("role", "==", "admin")
+        .limit(1)
+        .get();
+      if (!snap.empty) return true;
+    }
+
+    return false;
   } catch (error) {
     console.error("Auth Check Failed:", error);
     return false;
