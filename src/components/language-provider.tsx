@@ -248,7 +248,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "nav.search_sr": "Search products",
     "nav.language": "Language",
     "home.hero.title": "Modern Timekeeping Solutions for Professionals",
-    "home.hero.subtitle": "Eqilo.fi brings Swiss-engineered FDS Timing technology to Finnish agility and equestrian clubs. Wireless, weatherproof, and seamlessly integrated.",
+    "home.hero.subtitle": "Eqilo brings Swiss-engineered FDS Timing technology to sport events. Wireless, weatherproof, and seamlessly integrated.",
     "home.hero.shop": "Shop Equipment",
     "home.hero.services": "Our Services",
     "home.partners.title": "Trusted By & Official Partner Of",
