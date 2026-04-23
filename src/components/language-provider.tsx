@@ -59,7 +59,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "home.quote.text": "\"Tavoitteemme on parantaa nykyaikaisten ajanottoratkaisujen saatavuutta Suomessa ja tarjota kustannustehokkaita ratkaisuja seurojen käyttöön.\"",
     "home.quote.author": "Johannes Hyrsky",
     "home.quote.role": "Tulospalvelu asiantuntija",
-    "shop.all_equipment": "Kaikki Laitteet",
+    "shop.all_equipment": "Kaikki laitteet",
     "shop.categories": "Kategoriat",
     "shop.view_details": "Katso Tiedot",
     "shop.items_found": "tuotetta löytyi",
