@@ -63,7 +63,7 @@ export function AIProductSchema({ product }: { product: Product }) {
             name: `Mikä on takuu tuotteelle ${product.name}?`,
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Kaikilla FDS Timing -laitteilla on sveitsiläinen laatutakuu ja Eqilon yli 20 vuoden paikallinen asiantuntijatuki.',
+              text: 'Kaikilla FDS Timing -laitteilla on 2 vuoden takuu ja Eqilon yli 20 vuoden paikallinen asiantuntijatuki.',
             },
           },
           {

@@ -84,7 +84,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "product.image_pending": "Tuotekuva tulossa",
     "product.customize_kit": "Räätälöi pakettisi",
     "product.quantity": "Määrä",
-    "product.guarantee_desc": "Kaikilla FDS Timing -laitteilla on sveitsiläinen laatutakuu ja Eqilon yli 20 vuoden paikallinen asiantuntijatuki.",
+    "product.guarantee_desc": "Kaikilla FDS Timing -laitteilla on 2 vuoden takuu ja Eqilon yli 20 vuoden paikallinen asiantuntijatuki.",
     "category.after-sales": "Lisävarusteet",
     "category.peripheral": "Oheislaitteet",
     "category.display": "Näytöt",

@@ -36,7 +36,7 @@ export default function SportPage({ params }: { params: Promise<{ slug: string }
 
   const getSportImage = (slug: string) => {
     switch (slug) {
-      case 'equestrian': return '/sports/equestrian.webp';
+      case 'equestrian': return '/events/equestrian-indoor-ypaja-finland.jpg';
       case 'agility': return '/sports/agility.webp';
       case 'athletics': return '/sports/athletics.webp';
       case 'skiing': return '/sports/skiing.webp';
@@ -62,7 +62,7 @@ export default function SportPage({ params }: { params: Promise<{ slug: string }
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">{title}</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             {lang === "FI" 
-              ? "Ammattilaistason ratkaisut juuri teidän lajinne vaatimuksiin." 
+              ? "Käyttäjäystävälliset ratkaisut"
               : lang === "SE" 
               ? "Professionella lösningar för din sports specifika krav." 
               : "Professional solutions for the specific demands of your sport."}
