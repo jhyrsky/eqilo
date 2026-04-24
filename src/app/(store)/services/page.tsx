@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ArrowRight, BookOpen, Wrench, Trophy, Activity, Medal } from "lucide-react";
@@ -28,7 +29,16 @@ export default function ServicesPage() {
         
         {/* Training & Results Service */}
         <Card className="flex flex-col border-border/50 shadow-sm hover:shadow-lg transition-all group overflow-hidden">
-          <div className="h-2 w-full bg-primary"></div>
+          <div className="relative h-52 overflow-hidden">
+            <Image
+              src="/events/equestrian-outdoor-fds-tripod-finland.jpg"
+              alt="FDS Timing equipment setup at a Finnish equestrian event"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          </div>
           <CardHeader className="pt-8">
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Medal className="w-8 h-8 text-primary" />
@@ -61,7 +71,16 @@ export default function ServicesPage() {
 
         {/* Equipe Software */}
         <Card className="flex flex-col border-border/50 shadow-sm hover:shadow-lg transition-all group overflow-hidden">
-          <div className="h-2 w-full bg-secondary"></div>
+          <div className="relative h-52 overflow-hidden">
+            <Image
+              src="/events/equestrian-indoor-arena-scoreboard.jpg"
+              alt="Live results scoreboard at an indoor equestrian arena"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          </div>
           <CardHeader className="pt-8">
             <div className="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Activity className="w-8 h-8 text-secondary-foreground" />

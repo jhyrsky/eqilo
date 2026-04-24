@@ -9,7 +9,7 @@ if (!admin.apps.length) {
     });
   } catch (error) {
     console.error('[Firebase Admin] Initialization error:', error);
-    throw error; // Re-throw so we get a clear error rather than a silent failure
+    throw error;
   }
 }
 

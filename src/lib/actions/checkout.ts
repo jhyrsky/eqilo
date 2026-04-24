@@ -2,7 +2,16 @@
 
 import { adminDb } from "../firebase/admin";
 import { Stripe } from "stripe";
-import { CartItem, Product, Order } from "../types/firestore";
+
+interface StripeLineItem {
+  price_data: {
+    currency: string;
+    product_data: { name: string; description?: string; images?: string[] };
+    unit_amount: number;
+  };
+  quantity: number;
+}
+import { CartItem, Product, Order, OrderItem } from "../types/firestore";
 import { verifySession } from "./auth";
 import { Resend } from "resend";
 import { OrderConfirmationEmail } from "@/components/emails/OrderConfirmationEmail";
@@ -59,10 +68,8 @@ export async function createCheckoutSession(
     let subtotal = 0;
     let tax_total = 0;
     const tax_map: Record<number, number> = {};
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const line_items: any[] = [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const orderItems: any[] = [];
+    const line_items: StripeLineItem[] = [];
+    const orderItems: OrderItem[] = [];
 
     for (const item of cartItems) {
       const productDoc = await adminDb.collection("products").doc(item.product_id).get();

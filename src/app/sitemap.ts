@@ -3,6 +3,8 @@ import { getProductsServer } from '@/lib/actions/products-server';
 import { adminDb } from '@/lib/firebase/admin';
 import sportsData from '@/data/sports.json';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://eqilo.fi';
 

@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import type { Product } from '@/lib/types/firestore';
 
-// Initialize the Stripe Node.js SDK
-// Ensure you have STRIPE_SECRET_KEY in your .env.local
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2026-03-25.dahlia', // Use the appropriate Stripe API version
-});
+export const dynamic = 'force-dynamic';
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripe = stripeSecretKey ? new Stripe(stripeSecretKey, {
+  apiVersion: '2026-03-25.dahlia',
+}) : null;
 
 // Types for the expected payload
 interface CartItem {
@@ -27,27 +29,29 @@ interface AgentCheckoutPayload {
   stripePaymentToken: string; // The Shared Payment Token (SPT) from the AI agent
 }
 
-/**
- * Placeholder function to securely calculate the total order amount on the server.
- * NEVER trust the price sent from the client or an AI agent payload.
- * 
- * @param cartItems - The items the agent wants to purchase
- * @returns The total amount in the smallest currency unit (e.g., cents for EUR/USD)
- */
+// Fetches real prices from Firestore — never trust agent-supplied prices.
 async function calculateOrderAmount(cartItems: CartItem[]): Promise<number> {
-  // In a real application, you would fetch the prices from your database (e.g., Firestore)
-  // For demonstration, we assume each item costs 100 EUR (10000 cents)
+  const { adminDb } = await import('@/lib/firebase/admin');
   let total = 0;
   for (const item of cartItems) {
-    // Example:
-    // const product = await getProductFromDB(item.productId);
-    // total += product.price * item.quantity * 100; 
-    total += 10000 * item.quantity;
+    const doc = await adminDb.collection('products').doc(item.productId).get();
+    if (!doc.exists) {
+      throw new Error(`Product not found: ${item.productId}`);
+    }
+    const product = doc.data() as Product;
+    if (!product.is_active) {
+      throw new Error(`Product is not available: ${item.productId}`);
+    }
+    total += Math.round(product.price * 100) * item.quantity;
   }
   return total;
 }
 
 export async function POST(request: Request) {
+  if (!stripe) {
+    return NextResponse.json({ error: 'Stripe is not configured.' }, { status: 503 });
+  }
+
   try {
     // 1. Payload Parsing & Validation
     const payload: Partial<AgentCheckoutPayload> = await request.json();

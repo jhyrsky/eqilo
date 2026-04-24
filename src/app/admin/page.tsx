@@ -1,22 +1,28 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Users, ShoppingCart, DollarSign, TrendingUp, ArrowUpRight, Activity } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Package, Users, ShoppingCart, DollarSign, TrendingUp, ArrowUpRight, Activity, CheckCircle2 } from "lucide-react";
 import { adminDb } from "@/lib/firebase/admin";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
+import type { Order } from "@/lib/types/firestore";
+
+type RecentOrder = Omit<Order, 'created_at'> & { created_at: Date };
 
 export const dynamic = "force-dynamic";
 
 async function getDashboardStats() {
-  const [productsSnap, customersSnap, ordersSnap] = await Promise.all([
+  const [productsSnap, inStockSnap, customersSnap, ordersSnap] = await Promise.all([
     adminDb.collection("products").count().get(),
+    adminDb.collection("products").where("inventory_count", ">", 0).count().get(),
     adminDb.collection("customers").count().get(),
     adminDb.collection("orders").orderBy("created_at", "desc").limit(5).get(),
   ]);
 
   const totalProducts = productsSnap.data().count;
+  const inStockProducts = inStockSnap.data().count;
+  const inventoryPct = totalProducts > 0 ? Math.round((inStockProducts / totalProducts) * 100) : 0;
   const totalCustomers = customersSnap.data().count;
-  
-  // For production we would use a more efficient revenue query
+
   const allOrdersSnap = await adminDb.collection("orders").get();
   const totalOrders = allOrdersSnap.docs.length;
   const totalRevenue = allOrdersSnap.docs.reduce((sum, doc) => sum + (doc.data().total_amount || 0), 0);
@@ -25,9 +31,9 @@ async function getDashboardStats() {
     id: doc.id,
     ...doc.data(),
     created_at: doc.data().created_at?.toDate?.() || new Date()
-  }));
+  })) as RecentOrder[];
 
-  return { totalProducts, totalCustomers, totalOrders, totalRevenue, recentOrders };
+  return { totalProducts, totalCustomers, totalOrders, totalRevenue, recentOrders, inventoryPct };
 }
 
 export default async function AdminDashboardPage() {
@@ -117,7 +123,7 @@ export default async function AdminDashboardPage() {
                {stats.recentOrders.length === 0 ? (
                  <div className="p-12 text-center text-muted-foreground font-medium">No recent orders found.</div>
                ) : (
-                 stats.recentOrders.map((order: any) => (
+                 stats.recentOrders.map((order) => (
                    <div key={order.id} className="p-6 flex items-center justify-between hover:bg-muted/20 transition-colors">
                      <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
@@ -150,21 +156,18 @@ export default async function AdminDashboardPage() {
               <div className="space-y-2">
                  <div className="flex justify-between items-end mb-1">
                     <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Inventory Levels</span>
-                    <span className="text-xs font-bold">88%</span>
+                    <span className="text-xs font-bold">{stats.inventoryPct}%</span>
                  </div>
                  <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full w-[88%]"></div>
+                    <div className="h-full bg-blue-600 rounded-full transition-all" style={{ width: `${stats.inventoryPct}%` }}></div>
                  </div>
               </div>
 
-              <div className="space-y-2">
-                 <div className="flex justify-between items-end mb-1">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">API Latency</span>
-                    <span className="text-xs font-bold text-emerald-600">Optimal</span>
-                 </div>
-                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full w-[95%]"></div>
-                 </div>
+              <div className="flex items-center justify-between">
+                 <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">API Status</span>
+                 <Badge className="gap-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 font-bold">
+                    <CheckCircle2 className="w-3 h-3" /> Operational
+                 </Badge>
               </div>
 
               <div className="pt-4 space-y-3">
@@ -187,23 +190,3 @@ export default async function AdminDashboardPage() {
   );
 }
 
-// Simple internal Button component for the dashboard
-function Button({ className, children, size = "default", variant = "default", ...props }: any) {
-  const baseStyles = "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50";
-  const variants: any = {
-    default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-    outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-    ghost: "hover:bg-accent hover:text-accent-foreground",
-  };
-  const sizes: any = {
-    default: "h-9 px-4 py-2",
-    sm: "h-8 rounded-md px-3 text-xs",
-    lg: "h-10 rounded-md px-8",
-  };
-  
-  return (
-    <button className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
-      {children}
-    </button>
-  );
-}
