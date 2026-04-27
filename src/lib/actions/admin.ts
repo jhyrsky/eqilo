@@ -1,15 +1,15 @@
 "use server";
-import { adminDb, adminAuth } from "../firebase/admin";
+import { adminDb, adminAuth, adminStorage } from "../firebase/admin";
 import * as xlsx from "xlsx";
-import { Product, Category } from "../types/firestore";
+import { Product, Category, Order } from "../types/firestore";
 import { cookies } from "next/headers";
 import { revalidatePath, revalidateTag } from "next/cache";
 
 function serializeDoc(data: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
-      if (value && typeof (value as any).toDate === 'function') {
-        return [key, (value as any).toDate().toISOString()];
+      if (value && typeof (value as { toDate?: unknown }).toDate === 'function') {
+        return [key, (value as { toDate: () => Date }).toDate().toISOString()];
       }
       return [key, value];
     })
@@ -136,9 +136,9 @@ export async function importProducts(formData: FormData) {
     await batch.commit();
 
     return { success: true, count: products.length };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to import products:", error);
-    return { success: false, error: error.message || "Failed to parse file" };
+    return { success: false, error: error instanceof Error ? error.message : "Failed to parse file" };
   }
 }
 
@@ -183,11 +183,11 @@ export async function upsertProduct(id: string | null, data: Partial<Product>) {
     revalidatePath("/admin/products");
     revalidatePath("/shop");
     revalidatePath("/");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (revalidateTag as any)("products");
+    if (id) revalidatePath(`/product/${id}`);
+    (revalidateTag as (tag: string) => void)("products");
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -199,11 +199,39 @@ export async function deleteProduct(id: string) {
     revalidatePath("/admin/products");
     revalidatePath("/shop");
     revalidatePath("/");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (revalidateTag as any)("products");
+     
+    (revalidateTag as (tag: string) => void)("products");
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
+export async function getOrders(): Promise<Order[]> {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    const snapshot = await adminDb.collection("orders").orderBy("created_at", "desc").get();
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+      created_at: doc.data().created_at?.toDate?.() || new Date(),
+    })) as Order[];
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return [];
+  }
+}
+
+export async function updateOrder(id: string, data: Partial<Pick<Order, 'status' | 'tracking_number' | 'tracking_url' | 'courier'>>) {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    await adminDb.collection("orders").doc(id).update({ ...data });
+    revalidatePath("/admin/orders");
+    return { success: true };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -232,8 +260,8 @@ export async function upsertCategory(id: string | null, data: Partial<Category>)
     revalidatePath("/admin/categories");
     revalidatePath("/shop");
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -277,7 +305,32 @@ export async function syncCategoriesFromProducts() {
     revalidatePath("/shop");
     revalidatePath("/");
     return { success: true, count: seen.size };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
+export async function uploadProductImage(formData: FormData): Promise<{ url?: string; error?: string }> {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+
+    const file = formData.get("file") as File | null;
+    if (!file) throw new Error("No file provided");
+
+    const sku = (formData.get("sku") as string) || `tmp-${Date.now()}`;
+    const ext = file.name.split(".").pop() ?? "jpg";
+    const path = `images/${sku}-${Date.now()}.${ext}`;
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const bucket = adminStorage.bucket();
+    const bucketFile = bucket.file(path);
+
+    await bucketFile.save(buffer, { contentType: file.type, public: true });
+
+    const url = `https://storage.googleapis.com/${bucket.name}/${path}`;
+    return { url };
+  } catch (error: unknown) {
+    return { error: error instanceof Error ? error.message : "Upload failed" };
   }
 }

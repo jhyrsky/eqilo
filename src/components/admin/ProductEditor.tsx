@@ -30,8 +30,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2, Upload, X, GripVertical } from "lucide-react";
-import { storage } from "@/lib/firebase/client";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { uploadProductImage } from "@/lib/actions/admin";
 import Image from "next/image";
 
 const productSchema = z.object({
@@ -87,27 +86,25 @@ export function ProductEditor({ product, categories, onSuccess, onCancel }: Prod
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
     setUploading(true);
-    setUploadProgress(0);
     const sku = product?.sku || `tmp-${Date.now()}`;
     const uploaded: string[] = [];
     for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const ext = file.name.split(".").pop();
-      const path = `images/${sku}-${Date.now()}-${i}.${ext}`;
-      const storageRef = ref(storage, path);
-      await new Promise<void>((resolve, reject) => {
-        const task = uploadBytesResumable(storageRef, file);
-        task.on("state_changed",
-          snap => setUploadProgress(Math.round(((i + snap.bytesTransferred / snap.totalBytes) / files.length) * 100)),
-          reject,
-          async () => { uploaded.push(await getDownloadURL(task.snapshot.ref)); resolve(); }
-        );
-      });
+      setUploadProgress(Math.round((i / files.length) * 100));
+      const fd = new FormData();
+      fd.append("file", files[i]);
+      fd.append("sku", sku);
+      const res = await uploadProductImage(fd);
+      if (res.url) {
+        uploaded.push(res.url);
+      } else {
+        toast.error(res.error || "Upload failed");
+      }
     }
+    setUploadProgress(100);
     setImageUrls(prev => [...prev, ...uploaded]);
     setUploading(false);
     e.target.value = "";
-    toast.success(`${uploaded.length} image${uploaded.length > 1 ? "s" : ""} uploaded`);
+    if (uploaded.length) toast.success(`${uploaded.length} image${uploaded.length > 1 ? "s" : ""} uploaded`);
   }
 
   async function onSubmit(values: z.infer<typeof productSchema>) {

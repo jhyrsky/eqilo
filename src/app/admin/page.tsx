@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Package, Users, ShoppingCart, DollarSign, TrendingUp, ArrowUpRight, Activity, CheckCircle2 } from "lucide-react";
 import { adminDb } from "@/lib/firebase/admin";
 import { Badge } from "@/components/ui/badge";
@@ -115,7 +116,7 @@ export default async function AdminDashboardPage() {
                 <Activity className="w-5 h-5 text-primary" />
                 Recent Activity
               </CardTitle>
-              <Button variant="outline" size="sm" className="font-bold text-xs">View All</Button>
+              <Link href="/admin/orders"><Button variant="outline" size="sm" className="font-bold text-xs">View All</Button></Link>
             </div>
           </CardHeader>
           <CardContent className="p-0">

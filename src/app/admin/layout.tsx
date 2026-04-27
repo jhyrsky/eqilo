@@ -6,15 +6,16 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
-import { 
-  LayoutDashboard, 
-  Package, 
-  Users, 
-  ShoppingCart, 
-  Store, 
+import {
+  LayoutDashboard,
+  Package,
+  Users,
+  ShoppingCart,
+  Store,
   ChevronRight,
   Settings,
-  LogOut
+  LogOut,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Orders", href: "/admin/orders", icon: ClipboardList },
     { name: "Products", href: "/admin/products", icon: Package },
     { name: "Categories", href: "/admin/categories", icon: Store },
     { name: "Customers (CRM)", href: "/admin/customers", icon: Users },

@@ -210,7 +210,7 @@ export default function ProductContent({ product, relatedProducts }: ProductCont
               {isPending ? t("product.adding") : t("product.add_to_cart")}
             </Button>
           </div>
-          <Accordion className="w-full" defaultValue={["description", "specs"]}>
+          <Accordion className="w-full" defaultValue={["description", "specs", "videos"]}>
             <AccordionItem value="description" className="border-border/50">
               <AccordionTrigger className="text-md font-black uppercase tracking-tight py-4 hover:no-underline">{t("product.description")}</AccordionTrigger>
               <AccordionContent className="text-muted-foreground text-sm leading-relaxed prose prose-sm dark:prose-invert font-medium overflow-x-auto w-full">
@@ -275,15 +275,13 @@ export default function ProductContent({ product, relatedProducts }: ProductCont
                 <AccordionContent className="text-muted-foreground font-medium pt-2">
                   <div className="grid gap-6">
                     {product.videos.map((video, idx) => {
-                      const isYoutube = video.url.includes("youtube.com") || video.url.includes("youtu.be");
                       let embedUrl = video.url;
-                      
-                      if (isYoutube) {
-                        if (video.url.includes("watch?v=")) {
-                          embedUrl = video.url.replace("watch?v=", "embed/");
-                        } else if (video.url.includes("youtu.be/")) {
-                          embedUrl = video.url.replace("youtu.be/", "youtube.com/embed/");
-                        }
+                      if (video.url.includes("watch?v=")) {
+                        const videoId = new URL(video.url).searchParams.get("v");
+                        if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                      } else if (video.url.includes("youtu.be/")) {
+                        const videoId = video.url.split("youtu.be/")[1]?.split("?")[0];
+                        if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
                       }
                       
                       return (
