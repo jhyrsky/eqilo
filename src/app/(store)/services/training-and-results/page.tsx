@@ -2,18 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  ArrowRight, 
-  Medal, 
-  Trophy, 
-  Users, 
-  Presentation, 
-  Wrench,
-  CheckCircle2,
-  ChevronRight,
-  ShieldCheck
-} from "lucide-react";
-import Link from "next/link";
+import { ArrowRight, Medal, Presentation, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { useLanguage } from "@/components/language-provider";
 import { SEOContent as TrainingSEO } from "@/components/seo/TrainingSEO";
@@ -36,9 +25,8 @@ export default function TrainingAndResultsPage() {
                Eqilo tarjoaa kokonaisvaltaista tukea kilpailujärjestäjille. Varmistamme, että teknologia toimii saumattomasti ja tulokset ovat tarkkoja – jotta te voitte keskittyä urheiluun.
             </p>
           </div>
-          <div className="flex-1 w-full max-w-lg aspect-[4/3] bg-muted rounded-[2rem] flex items-center justify-center border shadow-xl relative overflow-hidden group">
-             <Trophy className="w-32 h-32 text-primary opacity-20 group-hover:scale-110 transition-transform duration-700" />
-             <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent" />
+          <div className="flex-1 w-full max-w-lg aspect-[4/3] rounded-[2rem] border shadow-xl relative overflow-hidden">
+             <Image src="/events/horse-park-tour-setup.jpg" alt="Horse park tour setup" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
           </div>
         </div>
 
@@ -119,9 +107,8 @@ export default function TrainingAndResultsPage() {
              Eqilo provides end-to-end support for competition organizers. We ensure the technology is seamless and results are accurate – so you can focus on the sport.
           </p>
         </div>
-        <div className="flex-1 w-full max-w-lg aspect-[4/3] bg-muted rounded-[2rem] flex items-center justify-center border shadow-xl relative overflow-hidden group">
-           <Trophy className="w-32 h-32 text-primary opacity-20 group-hover:scale-110 transition-transform duration-700" />
-           <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent" />
+        <div className="flex-1 w-full max-w-lg aspect-[4/3] rounded-[2rem] border shadow-xl relative overflow-hidden">
+           <Image src="/events/horse-park-tour-setup.jpg" alt="Horse park tour setup" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
         </div>
       </div>
 

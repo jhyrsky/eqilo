@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: '%s | Eqilo.fi',
     default: 'Eqilo.fi - Modern Timekeeping Solutions',
   },
-  description: "Eqilo provides modern timekeeping devices from Swiss manufacturer FDS Timing. Over 20 years of expertise for Finnish agility and equestrian clubs.",
+  description: "Eqilo provides modern timekeeping devices from Swiss manufacturer FDS Timing. Over 20 years of expertise for Finnish sport clubs.",
   keywords: ["FDS Timing", "timekeeping", "agility", "equestrian", "Eqilo", "Finland"],
   applicationName: 'Eqilo Webstore',
   authors: [{ name: 'Johannes Hyrsky', url: 'https://eqilo.fi/services' }],
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Eqilo.fi - Modern Timekeeping Solutions',
-    description: 'Eqilo provides modern timekeeping devices from Swiss manufacturer FDS Timing. Over 20 years of expertise for Finnish agility and equestrian clubs.',
+    description: 'Eqilo provides modern timekeeping devices from Swiss manufacturer FDS Timing. Over 20 years of expertise for Finnish sport clubs.',
     url: 'https://eqilo.fi',
     siteName: 'Eqilo.fi',
     locale: 'fi_FI',

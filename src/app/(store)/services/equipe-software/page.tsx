@@ -2,14 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  ArrowRight, 
-  MonitorPlay, 
-  Wifi, 
-  Cloud, 
-  Settings, 
-} from "lucide-react";
+import { ArrowRight, Wifi, Cloud, Settings } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/components/language-provider";
 import { SEOContent as EquipeSEO } from "@/components/seo/EquipeSEO";
 
@@ -37,13 +32,9 @@ export default function EquipeSoftwarePage() {
              </a>
           </div>
         </div>
-        <div className="flex-1 w-full max-w-md aspect-square bg-gradient-to-br from-secondary/20 to-primary/10 rounded-3xl flex items-center justify-center border-4 border-white shadow-2xl relative overflow-hidden group">
-           <MonitorPlay className="w-32 h-32 text-secondary-foreground opacity-80 group-hover:scale-110 transition-transform duration-500" />
-           <div className="absolute inset-x-0 bottom-0 bg-secondary/80 backdrop-blur-md p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-              <p className="font-bold">{t("equipe.live")}</p>
-              <p className="text-xs opacity-90">{t("equipe.live_desc")}</p>
-           </div>
-        </div>
+        <a href="https://equipe.com" target="_blank" rel="noreferrer" className="flex-1 w-full max-w-md aspect-square bg-gradient-to-br from-secondary/20 to-primary/10 rounded-3xl flex items-center justify-center border-4 border-white shadow-2xl relative overflow-hidden group">
+           <Image src="/logos/equipe-logo.png" alt="Equipe" width={240} height={120} className="object-contain group-hover:scale-105 transition-transform duration-500" />
+        </a>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8 mb-24">

@@ -6,7 +6,7 @@ export async function GET() {
   const products = await getProductsServer();
 
   let markdown = `# Eqilo.fi Product Catalog\n\n`;
-  markdown += `Eqilo provides modern, 100% wireless timekeeping devices from Swiss manufacturer FDS Timing, targeting agility and equestrian clubs in Finland.\n\n`;
+  markdown += `Eqilo provides modern, 100% wireless timekeeping devices from Swiss manufacturer FDS Timing, targeting sport clubs in Finland.\n\n`;
   markdown += `## Available Products\n\n`;
 
   products.forEach((p) => {
