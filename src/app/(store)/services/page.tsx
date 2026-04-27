@@ -82,8 +82,8 @@ export default function ServicesPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           </div>
           <CardHeader className="pt-8">
-            <div className="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Activity className="w-8 h-8 text-secondary-foreground" />
+            <div className="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform overflow-hidden p-1">
+              <Image src="/logos/equipe-logo.png" alt="Equipe" width={56} height={56} className="object-contain" />
             </div>
             <CardTitle className="text-3xl font-extrabold tracking-tight">{t("nav.equipe")}</CardTitle>
             <CardDescription className="text-lg font-medium mt-2">

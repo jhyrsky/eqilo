@@ -14,19 +14,24 @@ import { useCart } from "@/components/cart-provider";
 import { useState, useTransition } from "react";
 import { LocalizedDescription } from "@/components/LocalizedDescription";
 import { useLanguage } from "@/components/language-provider";
-import { 
-  ShoppingCart, 
-  Truck, 
-  ShieldCheck, 
-  ChevronRight, 
-  PackageOpen, 
-  CheckCircle2, 
+import {
+  ShoppingCart,
+  Truck,
+  ShieldCheck,
+  ChevronRight,
+  PackageOpen,
+  Pencil,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { formatPrice } from "@/lib/utils";
 import { SEOContent as ProductSEO } from "@/components/seo/ProductSEO";
 import { LocalizedSpecifications } from "@/components/LocalizedSpecifications";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { ProductEditor } from "@/components/admin/ProductEditor";
+import { getCategories } from "@/lib/actions/admin";
+import { Category } from "@/lib/types/firestore";
 
 interface ProductContentProps {
   product: Product;
@@ -37,6 +42,18 @@ export default function ProductContent({ product, relatedProducts }: ProductCont
   const { addItem } = useCart();
   const { t } = useLanguage();
   const [isPending, startTransition] = useTransition();
+  const isAdmin = useIsAdmin();
+  const [editOpen, setEditOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  async function openEditor() {
+    if (!categories.length) {
+      const cats = await getCategories();
+      setCategories(cats);
+    }
+    setEditOpen(true);
+  }
+
   const [selectedBundleOptions, setSelectedBundleOptions] = useState<string[]>(
     product.is_bundle && product.bundle_options 
       ? product.bundle_options.filter(o => !o.is_optional).map(o => o.id)
@@ -53,6 +70,31 @@ export default function ProductContent({ product, relatedProducts }: ProductCont
 
   return (
     <article itemScope itemType="https://schema.org/Product" className="container py-6 md:py-16">
+      {isAdmin && (
+        <>
+          <Button
+            onClick={openEditor}
+            size="sm"
+            variant="outline"
+            className="fixed bottom-6 right-6 z-50 shadow-lg gap-2 font-bold"
+          >
+            <Pencil className="w-4 h-4" /> Edit Product
+          </Button>
+          <Sheet open={editOpen} onOpenChange={setEditOpen}>
+            <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
+              <SheetHeader className="mb-6">
+                <SheetTitle>Edit: {product.name}</SheetTitle>
+              </SheetHeader>
+              <ProductEditor
+                product={product}
+                categories={categories}
+                onSuccess={() => setEditOpen(false)}
+                onCancel={() => setEditOpen(false)}
+              />
+            </SheetContent>
+          </Sheet>
+        </>
+      )}
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="flex items-center text-[10px] xs:text-xs font-bold text-muted-foreground/60 mb-6 uppercase tracking-widest overflow-x-auto whitespace-nowrap pb-2 no-scrollbar">
         <Link href="/shop" className="hover:text-primary transition-colors">{t("nav.products")}</Link>

@@ -188,7 +188,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "services.feature.config": "Mukautetut kilpailuasetukset",
     "equipe.title": "Equipe & Integraatio",
     "equipe.subtitle": "Hevosurheilun Standardi",
-    "equipe.desc": "Olemme hevosurheilun kilpailunhallinnan asiantuntijoita. Eqilo tarjoaa täyden tuen maailman johtavalle kilpailunhallintajärjestelmälle.",
+    "equipe.desc": "Olemme ratsastuskilpailujen tulospalvelun asiantuntijoita. Eqilo tarjoaa täyden tuen maailman johtavalle tulospalveluohjelmistolle.",
     "equipe.visit": "Vieraile Equipe.comissa",
     "equipe.live": "Livetulokset & Lähtölistat",
     "equipe.live_desc": "Täydellinen reaaliaikainen näkyvyys yleisölle.",
