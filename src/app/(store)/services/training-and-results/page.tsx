@@ -16,10 +16,10 @@ export default function TrainingAndResultsPage() {
         <div className="flex flex-col lg:flex-row items-center gap-12 mb-24">
           <div className="flex-1 space-y-6">
             <div className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm font-bold text-primary border border-primary/20">
-               Ammattilaistason Suorituskyky
+               Osaamisen kehittäminen
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground leading-tight">
-              Koulutus- ja Tulospalvelu
+              Koulutus- ja tulospalvelu
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
                Eqilo tarjoaa kokonaisvaltaista tukea kilpailujärjestäjille. Varmistamme, että teknologia toimii saumattomasti ja tulokset ovat tarkkoja – jotta te voitte keskittyä urheiluun.

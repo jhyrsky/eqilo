@@ -153,7 +153,9 @@ export default function ShopContent({ initialProducts }: ShopContentProps) {
                 <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 <Select value={sortKey} onValueChange={(val) => setSortKey(val)}>
                   <SelectTrigger className="h-8 text-xs font-semibold w-44 border-border/60">
-                    <SelectValue placeholder={t("shop.sort")} />
+                    <span className="truncate">
+                      {t(`shop.sort.${sortKey}`) !== `shop.sort.${sortKey}` ? t(`shop.sort.${sortKey}`) : t("shop.sort")}
+                    </span>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="featured" className="text-xs font-semibold">{t("shop.sort.featured")}</SelectItem>
