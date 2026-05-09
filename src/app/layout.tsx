@@ -9,6 +9,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import { WhatsAppHelpdesk } from "@/components/WhatsAppHelpdesk";
 import { CookieBanner } from "@/components/cookie-banner";
 import { cookies } from "next/headers";
+import { fetchStoreSettingsInternal } from "@/lib/actions/admin";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Toaster } from "@/components/ui/sonner";
 
@@ -59,7 +60,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
+  const [cookieStore, settings] = await Promise.all([
+    cookies(),
+    fetchStoreSettingsInternal(),
+  ]);
   const consentCookie = cookieStore.get("eqilo_cookie_consent");
   const hasConsentedToTracking = consentCookie?.value === "accepted";
 
@@ -114,7 +118,7 @@ export default async function RootLayout({
               <AuthProvider>
                 <CartProvider>
                   {children}
-                  <WhatsAppHelpdesk />
+                  <WhatsAppHelpdesk phone={settings.whatsapp_number || settings.contact_phone} />
                   <CookieBanner />
                 </CartProvider>
               </AuthProvider>

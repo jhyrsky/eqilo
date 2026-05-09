@@ -13,10 +13,7 @@ const ReactQRCode = dynamic(() => import("@lglab/react-qr-code").then((mod) => m
   loading: () => <div className="w-[160px] h-[160px] bg-muted animate-pulse rounded-md" />
 });
 
-// In a real implementation, this would be fetched from the global settings collection
-const DEFAULT_WHATSAPP_NUMBER = "+358505633097"; 
-
-export function WhatsAppHelpdesk() {
+export function WhatsAppHelpdesk({ phone = "+358505633097" }: { phone?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
   const { t, lang } = useLanguage();
@@ -31,7 +28,7 @@ export function WhatsAppHelpdesk() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const whatsappUrl = `https://wa.me/${DEFAULT_WHATSAPP_NUMBER.replace(/[^0-9]/g, "")}`;
+  const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g, "")}`;
 
   const handleInteraction = () => {
     if (isMobile) {

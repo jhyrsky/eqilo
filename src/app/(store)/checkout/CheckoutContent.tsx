@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useLanguage } from "@/components/language-provider";
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface CheckoutContentProps {
   products: Product[];
@@ -67,7 +68,7 @@ export default function CheckoutContent({ products }: CheckoutContentProps) {
     if (res.success && res.url) {
       window.location.href = res.url;
     } else {
-      alert(res.error || "Checkout failed");
+      toast.error(res.error || "Checkout failed");
       setIsSubmitting(false);
     }
   };

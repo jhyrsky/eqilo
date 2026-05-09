@@ -24,6 +24,7 @@ import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/components/cart-provider";
 import { useRouter } from "next/navigation";
 import { createCustomerPortalSession } from "@/lib/actions/billing";
+import { toast } from "sonner";
 import { useAuth } from "@/components/auth-provider";
 
 const statuses = [
@@ -59,7 +60,7 @@ export default function OrdersPage() {
       if (result.success && result.url) {
         window.location.href = result.url;
       } else {
-        alert(t("error.description") || "Failed to open billing portal.");
+        toast.error(t("error.description") || "Failed to open billing portal.");
       }
     } catch (e) {
       console.error("Billing Portal Error:", e);
