@@ -76,7 +76,7 @@ export default function ProductContent({ product, relatedProducts }: ProductCont
             onClick={openEditor}
             size="sm"
             variant="outline"
-            className="fixed bottom-6 right-6 z-50 shadow-lg gap-2 font-bold"
+            className="fixed bottom-24 right-6 z-50 shadow-lg gap-2 font-bold"
           >
             <Pencil className="w-4 h-4" /> Edit Product
           </Button>

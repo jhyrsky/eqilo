@@ -43,7 +43,7 @@ const dictionaries: Record<Language, TranslationDictionary> = {
     "home.advantage.battery.title": "Sisäänrakennettu akku",
     "home.advantage.battery.desc": "Moderni ja kompakti teknologia. Ei kömpelöitä ulkoisia akkuja.",
     "home.advantage.software.title": "Yhteensopivuus",
-    "home.advantage.software.desc": "Suora integraatio suosittuihin tulospalveluihin, kuten Equipeen.",
+    "home.advantage.software.desc": "Suora integraatio suosittuihin tulospalveluohjelmistoihin, kuten Equipe ja SmarterAgility.",
     "home.advantage.weather.title": "Säänkestävä",
     "home.advantage.weather.desc": "Vankka rakenne takaa luotettavan toiminnan vaativissa olosuhteissa.",
     "home.advantage.cost.title": "Kustannustehokas",

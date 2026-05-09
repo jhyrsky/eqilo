@@ -60,7 +60,7 @@ export default function TrainingAndResultsPage() {
               <CardContent className="space-y-4">
                  <p className="text-muted-foreground">Hoidamme teknisen toteutuksen ja tuloslaskennan puolestanne suurissa kilpailutapahtumissa.</p>
                  <ul className="space-y-2">
-                    {["Reaaliaikainen tuloslaskenta", "Live-streaming integraatio", "Virallinen tulosvahvistus"].map((item, i) => (
+                    {["Reaaliaikainen tuloslaskenta", "Live-streaming integraatio", "Viralliset tulokset"].map((item, i) => (
                       <li key={i} className="flex items-center gap-2 text-sm font-medium">
                          <CheckCircle2 className="w-4 h-4 text-primary" /> {item}
                       </li>
@@ -142,7 +142,7 @@ export default function TrainingAndResultsPage() {
             <CardContent className="space-y-4">
                <p className="text-muted-foreground">We manage the technical implementation and result calculations for your major events.</p>
                <ul className="space-y-2">
-                  {["Real-time result processing", "Live-streaming integration", "Official validation"].map((item, i) => (
+                  {["Real-time result processing", "Live-streaming integration", "Official results"].map((item, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm font-medium">
                        <CheckCircle2 className="w-4 h-4 text-primary" /> {item}
                     </li>

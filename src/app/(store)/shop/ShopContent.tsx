@@ -139,10 +139,10 @@ export default function ShopContent({ initialProducts }: ShopContentProps) {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="flex flex-col"
+                  className="h-full flex flex-col"
                 >
                   <Card className="flex flex-col flex-1 overflow-hidden transition-all hover:shadow-xl border-border/50 hover:border-primary/40 group bg-card text-card-foreground">
-                <Link href={`/product/${product.id}`} className="flex flex-col">
+                <Link href={`/product/${product.id}`} className="flex-1 flex flex-col min-h-0">
                   <div className="w-full aspect-square bg-muted/10 flex flex-col items-center justify-center p-6 relative group-hover:bg-muted/30 transition-colors bg-white border-b border-border/50 shrink-0">
                     {product.image_urls && product.image_urls.length > 0 ? (
                       <Image 
