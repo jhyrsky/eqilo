@@ -4,7 +4,8 @@ import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Clock, Tag, ShoppingCart, Check } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Clock, Tag, ShoppingCart, Check, ArrowUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/components/cart-provider";
 import { Product } from "@/lib/types/firestore";
@@ -14,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useQueryState, parseAsString } from "nuqs";
+import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { SEOContent as ShopSEO } from "@/components/seo/ShopSEO";
@@ -22,15 +24,34 @@ interface ShopContentProps {
   initialProducts: Product[];
 }
 
+type SortKey = "featured" | "price_asc" | "price_desc" | "name_asc" | "name_desc";
+
 export default function ShopContent({ initialProducts }: ShopContentProps) {
   const { addItem } = useCart();
   const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useQueryState("category", parseAsString.withDefault("all"));
+  const [sortKey, setSortKey] = useQueryState("sort", parseAsString.withDefault("featured"));
 
-  const activeProducts = initialProducts.filter(p => {
-    const matchesCategory = selectedCategory === "all" || p.category_id === selectedCategory;
-    return matchesCategory;
-  });
+  const activeProducts = useMemo(() => {
+    const filtered = initialProducts.filter(p =>
+      selectedCategory === "all" || p.category_id === selectedCategory
+    );
+
+    switch (sortKey as SortKey) {
+      case "price_asc":
+        return [...filtered].sort((a, b) => a.price - b.price);
+      case "price_desc":
+        return [...filtered].sort((a, b) => b.price - a.price);
+      case "name_asc":
+        return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+      case "name_desc":
+        return [...filtered].sort((a, b) => b.name.localeCompare(a.name));
+      default:
+        return [...filtered].sort((a, b) =>
+          a.category_id.localeCompare(b.category_id) || a.name.localeCompare(b.name)
+        );
+    }
+  }, [initialProducts, selectedCategory, sortKey]);
 
   const categories = Array.from(new Set(initialProducts.map(p => p.category_id)));
 
@@ -124,8 +145,25 @@ export default function ShopContent({ initialProducts }: ShopContentProps) {
               <h1 className="text-3xl xs:text-4xl md:text-5xl font-black tracking-tighter text-foreground leading-tight">{t("shop.all_equipment")}</h1>
               <p className="text-muted-foreground text-sm xs:text-base md:text-lg font-medium">{t("shop.description")}</p>
             </div>
-            <div className="mt-4 md:mt-0 text-[10px] xs:text-xs md:text-sm font-bold bg-primary/10 text-primary px-4 py-1.5 rounded-full border border-primary/20 w-fit">
-              {activeProducts.length} {t("shop.items_found")}
+            <div className="mt-4 md:mt-0 flex items-center gap-3 flex-wrap">
+              <div className="text-[10px] xs:text-xs md:text-sm font-bold bg-primary/10 text-primary px-4 py-1.5 rounded-full border border-primary/20 w-fit">
+                {activeProducts.length} {t("shop.items_found")}
+              </div>
+              <div className="flex items-center gap-2">
+                <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                <Select value={sortKey} onValueChange={(val) => setSortKey(val)}>
+                  <SelectTrigger className="h-8 text-xs font-semibold w-44 border-border/60">
+                    <SelectValue placeholder={t("shop.sort")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="featured" className="text-xs font-semibold">{t("shop.sort.featured")}</SelectItem>
+                    <SelectItem value="price_asc" className="text-xs font-semibold">{t("shop.sort.price_asc")}</SelectItem>
+                    <SelectItem value="price_desc" className="text-xs font-semibold">{t("shop.sort.price_desc")}</SelectItem>
+                    <SelectItem value="name_asc" className="text-xs font-semibold">{t("shop.sort.name_asc")}</SelectItem>
+                    <SelectItem value="name_desc" className="text-xs font-semibold">{t("shop.sort.name_desc")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -172,7 +210,7 @@ export default function ShopContent({ initialProducts }: ShopContentProps) {
                       </p>
                     </div>
                     <CardTitle className="text-xl leading-tight font-extrabold group-hover:text-primary transition-colors line-clamp-2">{product.name}</CardTitle>
-                    <div className="text-sm text-muted-foreground line-clamp-2 mt-3 leading-relaxed font-medium">
+                    <div className="text-sm text-muted-foreground line-clamp-2 mt-3 leading-relaxed font-medium [&_p]:m-0 [&_p]:p-0">
                       <LocalizedDescription product={product} />
                     </div>
                   </CardHeader>
