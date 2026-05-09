@@ -37,9 +37,9 @@ export default function SportPage({ params }: { params: Promise<{ slug: string }
   const getSportImage = (slug: string) => {
     switch (slug) {
       case 'equestrian': return '/events/equestrian-indoor-ypaja-finland.jpg';
-      case 'agility': return '/sports/agility.webp';
-      case 'athletics': return '/sports/athletics.webp';
-      case 'skiing': return '/sports/skiing.webp';
+      case 'agility': return '/events/agility-stadium-finland.jpg';
+      case 'athletics': return '/events/athletics-finland.jpg';
+      case 'skiing': return '/events/skiing-finland.jpg';
       case 'motorsports': return '/sports/motorsports.webp';
       case 'cycling': return '/sports/cycling.webp';
       default: return '/sports/athletics.webp';

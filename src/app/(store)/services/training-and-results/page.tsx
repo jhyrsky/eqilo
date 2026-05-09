@@ -26,7 +26,7 @@ export default function TrainingAndResultsPage() {
             </p>
           </div>
           <div className="flex-1 w-full max-w-lg aspect-[4/3] rounded-[2rem] border shadow-xl relative overflow-hidden">
-             <Image src="/events/horse-park-tour-setup.jpg" alt="Horse park tour setup" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+             <Image src="/events/horse-park-tour-setup-mirka.jpg" alt="Horse park tour setup" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
           </div>
         </div>
 
@@ -108,7 +108,7 @@ export default function TrainingAndResultsPage() {
           </p>
         </div>
         <div className="flex-1 w-full max-w-lg aspect-[4/3] rounded-[2rem] border shadow-xl relative overflow-hidden">
-           <Image src="/events/horse-park-tour-setup.jpg" alt="Horse park tour setup" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+           <Image src="/events/horse-park-tour-setup-mirka.jpg" alt="Horse park tour setup" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
         </div>
       </div>
 
