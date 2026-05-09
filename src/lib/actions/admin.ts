@@ -252,7 +252,7 @@ export async function getCustomers() {
     const isAdmin = await checkAdmin();
     if (!isAdmin) throw new Error("Unauthorized");
     const snapshot = await adminDb.collection("customers").get();
-    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    return snapshot.docs.map(doc => ({ ...serializeDoc(doc.data() as Record<string, unknown>), id: doc.id }));
   } catch (error) {
     console.error("Error fetching customers:", error);
     return [];
