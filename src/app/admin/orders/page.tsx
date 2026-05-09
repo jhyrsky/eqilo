@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrders, updateOrder } from "@/lib/actions/admin";
+import { getOrders, updateOrder, deleteOrder } from "@/lib/actions/admin";
 import { Order } from "@/lib/types/firestore";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,11 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ExternalLink, Loader2, Package, Search, FileText, Truck, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { ExternalLink, Loader2, Package, Search, FileText, Truck, ChevronUp, ChevronDown, ChevronsUpDown, Trash2 } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 import { useMemo } from "react";
 
@@ -49,6 +53,8 @@ export default function AdminOrdersPage() {
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [selected, setSelected] = useState<SerializedOrder | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [trackingNum, setTrackingNum] = useState("");
   const [trackingUrl, setTrackingUrl] = useState("");
   const [courier, setCourier] = useState("");
@@ -89,6 +95,20 @@ export default function AdminOrdersPage() {
       toast.error(res.error || "Failed to update order");
     }
     setSaving(false);
+  }
+
+  async function handleDelete() {
+    if (!selected) return;
+    setDeleting(true);
+    const res = await deleteOrder(selected.id);
+    if (res.success) {
+      toast.success("Order deleted");
+      setOrders(prev => prev.filter(o => o.id !== selected.id));
+      setSelected(null);
+    } else {
+      toast.error(res.error || "Failed to delete order");
+    }
+    setDeleting(false);
   }
 
   function handleSort(key: SortKey) {
@@ -327,6 +347,29 @@ export default function AdminOrdersPage() {
                 <Button className="w-full font-bold" onClick={handleSave} disabled={saving}>
                   {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />} Save Changes
                 </Button>
+              </section>
+
+              <section className="pt-2 border-t border-destructive/20">
+                <Button variant="destructive" className="w-full font-bold" disabled={deleting} onClick={() => setDeleteOpen(true)}>
+                  {deleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+                  Delete Order
+                </Button>
+                <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete order #{selected.id.slice(-6).toUpperCase()}?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This permanently removes the order from Firestore. This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel onClick={() => setDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </section>
             </>
           )}

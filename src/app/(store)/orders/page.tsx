@@ -91,15 +91,17 @@ export default function OrdersPage() {
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">{t("nav.my_orders")}</h1>
           <p className="text-muted-foreground">{t("orders.description")}</p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={handleBillingPortal} 
-          disabled={isBillingLoading}
-          className="font-bold border-primary/20 hover:bg-primary/5 shadow-sm"
-        >
-          {isBillingLoading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <CreditCard className="w-4 h-4 mr-2" />}
-          Manage Billing & Invoices
-        </Button>
+        {!loading && orders.length > 0 && (
+          <Button
+            variant="outline"
+            onClick={handleBillingPortal}
+            disabled={isBillingLoading}
+            className="font-bold border-primary/20 hover:bg-primary/5 shadow-sm"
+          >
+            {isBillingLoading ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <CreditCard className="w-4 h-4 mr-2" />}
+            {t("orders.manage_billing")}
+          </Button>
+        )}
       </div>
 
       {orders.length === 0 ? (
@@ -237,13 +239,13 @@ export default function OrdersPage() {
                       <a href={order.stripe_invoice_pdf} target="_blank" rel="noreferrer" className="w-full sm:w-auto">
                         <Button variant="outline" className="w-full sm:w-auto font-bold">
                           <FileDown className="w-4 h-4 mr-2" />
-                          {t("orders.download_invoice") || "Download Invoice"}
+                          {t("orders.download_invoice")}
                         </Button>
                       </a>
                     ) : (
                       <div className="text-xs text-muted-foreground italic flex items-center">
                         <Clock className="w-3 h-3 mr-1" />
-                        Invoice processing...
+                        {t("orders.invoice_processing")}
                       </div>
                     )}
                     <Button 
@@ -251,7 +253,7 @@ export default function OrdersPage() {
                       onClick={() => handleReorder(order)}
                     >
                       <RefreshCw className="w-4 h-4 mr-2" />
-                      {t("orders.reorder") || "Reorder Items"}
+                      {t("orders.reorder")}
                     </Button>
                   </div>
                 </CardContent>

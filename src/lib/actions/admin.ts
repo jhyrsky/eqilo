@@ -259,12 +259,36 @@ export async function getCustomers() {
   }
 }
 
+export async function deleteCustomer(id: string) {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    await adminDb.collection("customers").doc(id).delete();
+    revalidatePath("/admin/customers");
+    return { success: true };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
 export async function updateCustomer(id: string, data: Partial<Pick<import("../types/firestore").Customer, 'email' | 'phone_number' | 'role' | 'business_id' | 'crm_notes'>>) {
   try {
     const isAdmin = await checkAdmin();
     if (!isAdmin) throw new Error("Unauthorized");
     await adminDb.collection("customers").doc(id).update({ ...data });
     revalidatePath("/admin/customers");
+    return { success: true };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
+export async function deleteOrder(id: string) {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    await adminDb.collection("orders").doc(id).delete();
+    revalidatePath("/admin/orders");
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { getCustomers, updateCustomer } from "@/lib/actions/admin";
+import { getCustomers, updateCustomer, deleteCustomer } from "@/lib/actions/admin";
 import { Customer } from "@/lib/types/firestore";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -16,8 +16,12 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Loader2, ChevronUp, ChevronDown, ChevronsUpDown, Pencil, Users } from "lucide-react";
+import { Loader2, ChevronUp, ChevronDown, ChevronsUpDown, Pencil, Users, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type SortKey = "email" | "phone_number" | "role" | "business_id";
 type SortDir = "asc" | "desc";
@@ -36,6 +40,8 @@ export default function AdminCustomersPage() {
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [selected, setSelected] = useState<Customer | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -95,6 +101,20 @@ export default function AdminCustomersPage() {
       toast.error(res.error || "Failed to update customer");
     }
     setSaving(false);
+  }
+
+  async function handleDelete() {
+    if (!selected) return;
+    setDeleting(true);
+    const res = await deleteCustomer(selected.id);
+    if (res.success) {
+      toast.success("Customer deleted");
+      setCustomers(prev => prev.filter(c => c.id !== selected.id));
+      setSelected(null);
+    } else {
+      toast.error(res.error || "Failed to delete customer");
+    }
+    setDeleting(false);
   }
 
   const colBtn = "flex items-center font-bold hover:text-primary transition-colors whitespace-nowrap";
@@ -212,6 +232,29 @@ export default function AdminCustomersPage() {
                 <Button className="w-full font-bold" onClick={handleSave} disabled={saving}>
                   {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />} Save Changes
                 </Button>
+
+                <div className="pt-2 border-t border-destructive/20">
+                  <Button variant="destructive" className="w-full font-bold" disabled={deleting} onClick={() => setDeleteOpen(true)}>
+                    {deleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+                    Delete Customer
+                  </Button>
+                  <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete {selected.email || selected.id}?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This permanently removes the customer from Firestore. This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
               </div>
             </>
           )}
