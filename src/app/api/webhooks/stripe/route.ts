@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { Stripe } from "stripe";
 import { adminDb } from "@/lib/firebase/admin";
+import { FieldValue } from "firebase-admin/firestore";
 import { Resend } from "resend";
 import { getOrderConfirmationEmailHtml, getAdminNotificationEmailHtml } from "@/lib/emails";
 import { fetchStoreSettingsInternal } from "@/lib/actions/admin";
@@ -46,21 +47,20 @@ export async function POST(req: Request) {
     const lang = (session.metadata?.lang || "FI") as "FI" | "EN" | "SE";
 
     if (orderId) {
-      // Fetch expanded session to retrieve invoice and customer details securely
-      const sessionWithInvoice = await stripe.checkout.sessions.retrieve(session.id, {
-        expand: ['invoice', 'customer']
-      });
+      const [sessionWithInvoice, settings] = await Promise.all([
+        stripe.checkout.sessions.retrieve(session.id, { expand: ['invoice', 'customer'] }),
+        fetchStoreSettingsInternal(),
+      ]);
 
       const invoice = sessionWithInvoice.invoice as Stripe.Invoice;
       const stripeCustomerId = sessionWithInvoice.customer as string | Stripe.Customer | Stripe.DeletedCustomer;
       const finalCustomerId = typeof stripeCustomerId === 'string' ? stripeCustomerId : (stripeCustomerId as Stripe.Customer)?.id || null;
 
-      // 1. Update order status in Firestore
+      // 1. Update order status
       const orderRef = adminDb.collection("orders").doc(orderId);
-      
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const shippingDetails = (session as any).shipping_details?.address;
-      
+
       await orderRef.update({
         status: "paid",
         stripe_payment_intent: session.payment_intent as string,
@@ -76,35 +76,55 @@ export async function POST(req: Request) {
         } : null,
       });
 
-      // 2. Fetch customer details and order to send email
       try {
         const orderSnap = await orderRef.get();
         const orderData = orderSnap.data();
-        
+
         if (orderData) {
-          const userSnap = await adminDb.collection("customers").doc(orderData.user_id).get();
+          const userId = orderData.user_id as string;
+
+          // 2. Decrement inventory for each ordered item
+          const inventoryUpdates = (orderData.items as { product_id: string; quantity: number }[]).map(item =>
+            adminDb.collection("products").doc(item.product_id).update({
+              inventory_count: FieldValue.increment(-item.quantity),
+            })
+          );
+
+          // 3. Clear the customer's cart
+          const cartUpdate = adminDb.collection("carts").doc(userId).update({
+            items: [],
+            abandoned_recovery_sent: false,
+            updated_at: new Date(),
+          }).catch(() => {
+            // Cart may not exist — that's fine
+          });
+
+          await Promise.all([...inventoryUpdates, cartUpdate]);
+
+          // 4. Send order confirmation email
+          const userSnap = await adminDb.collection("customers").doc(userId).get();
           const customerEmail = userSnap.data()?.email || session.customer_details?.email;
-          
-          // 3. Trigger Holvi Invoice Integration
+
           if (customerEmail) {
-            const subject = lang === "FI" ? `Tilausvahvistus - ${orderId}` : 
-                            lang === "SE" ? `Orderbekräftelse - ${orderId}` : 
+            const subject = lang === "FI" ? `Tilausvahvistus - ${orderId}` :
+                            lang === "SE" ? `Orderbekräftelse - ${orderId}` :
                             `Order Confirmation - ${orderId}`;
 
             await resend.emails.send({
               from: 'Eqilo.fi <orders@eqilo.fi>',
               to: [customerEmail],
-              subject: subject,
-              html: getOrderConfirmationEmailHtml(orderId, orderData.total_amount, lang, await fetchStoreSettingsInternal()),
+              subject,
+              html: getOrderConfirmationEmailHtml(orderId, orderData.total_amount, lang, settings),
             });
           }
 
-          // Admin notification
+          // 5. Admin notification
+          const adminEmail = settings.notification_email || "orders@eqilo.fi";
           await resend.emails.send({
-             from: 'Eqilo.fi System <system@eqilo.fi>',
-             to: ['johannes@hyrsky.fi'],
-             subject: `NEW ORDER - ${orderId}`,
-             html: getAdminNotificationEmailHtml(orderId, orderData.total_amount, orderData.user_id),
+            from: 'Eqilo.fi System <system@eqilo.fi>',
+            to: [adminEmail],
+            subject: `NEW ORDER - ${orderId}`,
+            html: getAdminNotificationEmailHtml(orderId, orderData.total_amount, userId),
           });
         }
       } catch (err) {

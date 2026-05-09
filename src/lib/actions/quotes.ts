@@ -220,7 +220,7 @@ export async function generateQuote(
     await resend.emails.send({
       from: "Eqilo <quotes@eqilo.fi>",
       to: [orgDetails.email],
-      bcc: ["tarjoukset@eqilo.fi"],
+      bcc: [settings.notification_email || "tarjoukset@eqilo.fi"],
       subject: labels.subject,
       html,
     });

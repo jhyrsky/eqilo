@@ -13,8 +13,6 @@ interface StripeLineItem {
 }
 import { CartItem, Product, Order, OrderItem } from "../types/firestore";
 import { verifySession } from "./auth";
-import { Resend } from "resend";
-import { OrderConfirmationEmail } from "@/components/emails/OrderConfirmationEmail";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripe = stripeSecretKey ? new Stripe(stripeSecretKey, {
@@ -91,6 +89,7 @@ export async function createCheckoutSession(
 
       orderItems.push({
         product_id: productDoc.id,
+        product_name: product.name,
         quantity: item.quantity,
         price: unitPrice,
       });
@@ -141,22 +140,6 @@ export async function createCheckoutSession(
     };
     
     await orderRef.set(newOrder);
-
-    // Send confirmation email via Resend
-    if (process.env.RESEND_API_KEY && customerData.email) {
-      try {
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: "Eqilo <orders@eqilo.fi>", // Use an actual verified domain here in production
-          to: [customerData.email],
-          subject: `Order Confirmation #${orderRef.id.substring(0, 6)} - Eqilo.fi`,
-          react: OrderConfirmationEmail({ orderId: orderRef.id, amount: newOrder.total_amount! }),
-        });
-      } catch (emailError) {
-        console.error("Failed to send confirmation email:", emailError);
-        // Continue checkout even if email fails
-      }
-    }
 
     // Create Stripe session
     const stripeSession = await stripe.checkout.sessions.create({

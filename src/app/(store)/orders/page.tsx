@@ -182,7 +182,7 @@ export default function OrdersPage() {
                       <div className="space-y-3">
                          {order.items.map((item, idx) => (
                            <div key={idx} className="flex justify-between items-center text-sm font-medium">
-                              <span className="text-muted-foreground">{item.quantity}x <span className="text-foreground">{t("orders.product_id")}: {item.product_id.substring(0, 10)}...</span></span>
+                              <span className="text-muted-foreground">{item.quantity}x <span className="text-foreground">{item.product_name || item.product_id.substring(0, 10)}</span></span>
                               <span>{formatPrice(item.price * item.quantity)} €</span>
                            </div>
                          ))}
