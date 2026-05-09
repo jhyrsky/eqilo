@@ -1,5 +1,23 @@
 import { formatPrice } from "@/lib/utils";
-export function getOrderConfirmationEmailHtml(orderId: string, totalAmount: string | number, lang: "FI" | "EN" | "SE" = "FI") {
+
+export interface BusinessInfo {
+  business_name?: string;
+  business_id?: string;
+  street_address?: string;
+  postal_code?: string;
+  city?: string;
+}
+
+const DEFAULT_BUSINESS: BusinessInfo = {
+  business_name: "Eqilo Oy",
+  business_id: "3530342-3",
+  street_address: "Hakkapeliitantie 4",
+  postal_code: "08350",
+  city: "LOHJA",
+};
+
+export function getOrderConfirmationEmailHtml(orderId: string, totalAmount: string | number, lang: "FI" | "EN" | "SE" = "FI", biz: BusinessInfo = {}) {
+  const b = { ...DEFAULT_BUSINESS, ...biz };
   const content = {
     FI: {
       title: "Tilaus vahvistettu!",
@@ -75,12 +93,73 @@ export function getOrderConfirmationEmailHtml(orderId: string, totalAmount: stri
             <p style="margin-top: 30px;">${content.regards}</p>
           </div>
           <div class="footer">
-            Eqilo Oy | Business ID: 3530342-3 | Hakkapeliitantie 4, 08350 LOHJA
+            ${b.business_name} | ${lang === "FI" ? "Y-tunnus" : lang === "SE" ? "Org.nr" : "Business ID"}: ${b.business_id} | ${b.street_address}, ${b.postal_code} ${b.city}
           </div>
         </div>
       </body>
     </html>
   `;
+}
+
+export function getAbandonedCartEmailHtml(lang: "FI" | "EN" | "SE" = "FI", baseUrl: string, biz: BusinessInfo = {}) {
+  const b = { ...DEFAULT_BUSINESS, ...biz };
+  const c = {
+    FI: {
+      subject: "Unohditko jotain?",
+      heading: "Hei!",
+      body: "Huomasimme, että jätit ammattilaistason FDS Timing -laitteita ostoskoriisi.",
+      cta_body: "Tuotteet odottavat sinua – viimeistele tilaus turvallisesti alla olevasta painikkeesta.",
+      button: "Palaa ostoskoriin",
+      footer_note: "Et halua enää viestejä? Kirjaudu sisään ja tyhjennä ostoskorisi.",
+    },
+    EN: {
+      subject: "Did you forget something?",
+      heading: "Hi there!",
+      body: "We noticed you left some professional FDS Timing equipment in your cart.",
+      cta_body: "Your items are still waiting — complete your secure checkout with the button below.",
+      button: "Return to Cart",
+      footer_note: "Don't want reminders? Log in and clear your cart.",
+    },
+    SE: {
+      subject: "Glömde du något?",
+      heading: "Hej!",
+      body: "Vi märkte att du lämnade professionell FDS Timing-utrustning i din varukorg.",
+      cta_body: "Dina produkter väntar på dig — slutför din säkra betalning med knappen nedan.",
+      button: "Återgå till varukorgen",
+      footer_note: "Vill du inte ha påminnelser? Logga in och töm din varukorg.",
+    },
+  }[lang];
+
+  return {
+    subject: c.subject,
+    html: `<!DOCTYPE html>
+<html lang="${lang.toLowerCase()}">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f5f7fa;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fa;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <tr><td style="background:#0055A4;padding:28px 40px;">
+          <h1 style="margin:0;color:#ffffff;font-size:24px;letter-spacing:-0.5px;">EQILO.FI</h1>
+        </td></tr>
+        <tr><td style="padding:32px 40px;">
+          <h2 style="margin:0 0 16px;font-size:20px;color:#1a1a1a;">${c.heading}</h2>
+          <p style="margin:0 0 12px;font-size:15px;color:#444;line-height:1.6;">${c.body}</p>
+          <p style="margin:0 0 28px;font-size:15px;color:#444;line-height:1.6;">${c.cta_body}</p>
+          <a href="${baseUrl}/cart" style="display:inline-block;background:#0055A4;color:#ffffff;padding:14px 32px;text-decoration:none;border-radius:8px;font-weight:bold;font-size:15px;">${c.button}</a>
+        </td></tr>
+        <tr><td style="padding:20px 40px;background:#f8fafc;border-top:1px solid #e8edf2;">
+          <p style="margin:0;font-size:12px;color:#999;line-height:1.6;">
+            ${b.business_name} &nbsp;·&nbsp; ${lang === "FI" ? "Y-tunnus" : lang === "SE" ? "Org.nr" : "Business ID"}: ${b.business_id}<br/>
+            ${c.footer_note}
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+  };
 }
 
 export function getAdminNotificationEmailHtml(orderId: string, totalAmount: string | number, customerId: string) {

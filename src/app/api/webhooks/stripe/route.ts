@@ -4,6 +4,7 @@ import { Stripe } from "stripe";
 import { adminDb } from "@/lib/firebase/admin";
 import { Resend } from "resend";
 import { getOrderConfirmationEmailHtml, getAdminNotificationEmailHtml } from "@/lib/emails";
+import { fetchStoreSettingsInternal } from "@/lib/actions/admin";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripe = stripeSecretKey ? new Stripe(stripeSecretKey, {
@@ -94,7 +95,7 @@ export async function POST(req: Request) {
               from: 'Eqilo.fi <orders@eqilo.fi>',
               to: [customerEmail],
               subject: subject,
-              html: getOrderConfirmationEmailHtml(orderId, orderData.total_amount, lang),
+              html: getOrderConfirmationEmailHtml(orderId, orderData.total_amount, lang, await fetchStoreSettingsInternal()),
             });
           }
 

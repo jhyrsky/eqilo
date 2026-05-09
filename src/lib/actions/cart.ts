@@ -34,9 +34,9 @@ export async function syncUserCart(userId: string, items: CartItem[]) {
     }
     
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to sync cart:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -52,9 +52,9 @@ export async function fetchUserCart(userId: string) {
       return { success: true, items: doc.data()?.items as CartItem[] };
     }
     return { success: true, items: [] };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch cart:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -65,6 +65,18 @@ async function requireAdmin() {
   const userDoc = await adminDb.collection("customers").doc(session.uid).get();
   if (!userDoc.exists || userDoc.data()?.role !== "admin") {
     throw new Error("Forbidden: Admin access required");
+  }
+}
+
+export async function getSharedCart(cartId: string) {
+  try {
+    const doc = await adminDb.collection("carts").doc(cartId).get();
+    if (!doc.exists) return { success: false, error: "Cart not found" };
+    const data = doc.data();
+    if (!data?.is_public_link) return { success: false, error: "This cart is not publicly shared" };
+    return { success: true, items: data.items as CartItem[] };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -80,8 +92,8 @@ export async function generateShareableCartLink(cartId: string) {
     
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://eqilo.fi';
     return { success: true, url: `${baseUrl}/cart/${cartId}` };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }
 
@@ -109,7 +121,7 @@ export async function updateCartItemPrice(cartId: string, productId: string, new
     });
 
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
   }
 }

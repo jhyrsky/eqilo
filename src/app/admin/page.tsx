@@ -193,14 +193,18 @@ export default async function AdminDashboardPage({
             <div className="pt-4 space-y-3">
               <h4 className="text-sm font-bold text-foreground">Quick Admin Actions</h4>
               <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" className="h-20 flex flex-col gap-2 font-bold border-border/50 hover:border-primary/50 transition-all">
-                  <Package className="w-5 h-5 text-primary" />
-                  Add Product
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2 font-bold border-border/50 hover:border-primary/50 transition-all">
-                  <Users className="w-5 h-5 text-primary" />
-                  Find Customer
-                </Button>
+                <Link href="/admin/products">
+                  <Button variant="outline" className="h-20 w-full flex flex-col gap-2 font-bold border-border/50 hover:border-primary/50 transition-all">
+                    <Package className="w-5 h-5 text-primary" />
+                    Add Product
+                  </Button>
+                </Link>
+                <Link href="/admin/customers">
+                  <Button variant="outline" className="h-20 w-full flex flex-col gap-2 font-bold border-border/50 hover:border-primary/50 transition-all">
+                    <Users className="w-5 h-5 text-primary" />
+                    Find Customer
+                  </Button>
+                </Link>
               </div>
             </div>
           </CardContent>

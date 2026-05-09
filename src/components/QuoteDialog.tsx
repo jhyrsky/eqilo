@@ -21,7 +21,7 @@ import { useLanguage } from "@/components/language-provider";
 
 export function QuoteDialog() {
   const { items } = useCart();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [details, setDetails] = useState({
@@ -40,7 +40,7 @@ export function QuoteDialog() {
 
     setLoading(true);
     try {
-      const res = await generateQuote(items, details);
+      const res = await generateQuote(items, details, lang);
 
       if (res.success) {
         toast.success("Quote sent to your email!");

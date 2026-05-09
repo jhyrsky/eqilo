@@ -235,6 +235,15 @@ export async function getStoreSettings(): Promise<Record<string, unknown>> {
   }
 }
 
+export async function fetchStoreSettingsInternal(): Promise<Record<string, string>> {
+  try {
+    const doc = await adminDb.collection("settings").doc("store").get();
+    return doc.exists ? (doc.data() as Record<string, string>) : {};
+  } catch {
+    return {};
+  }
+}
+
 export async function updateStoreSettings(data: Record<string, unknown>) {
   try {
     const isAdmin = await checkAdmin();
@@ -304,6 +313,26 @@ export async function updateOrder(id: string, data: Partial<Pick<Order, 'status'
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
+export async function getAdminCarts() {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    const snapshot = await adminDb.collection("carts").orderBy("updated_at", "desc").get();
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        created_at: data.created_at?.toDate?.()?.toISOString?.() ?? new Date().toISOString(),
+        updated_at: data.updated_at?.toDate?.()?.toISOString?.() ?? new Date().toISOString(),
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching carts:", error);
+    return [];
   }
 }
 
