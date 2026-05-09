@@ -18,9 +18,20 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ExternalLink, Loader2, Package, Search, FileText, Truck } from "lucide-react";
+import { ExternalLink, Loader2, Package, Search, FileText, Truck, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+
+import { useMemo } from "react";
 
 type SerializedOrder = Omit<Order, 'created_at'> & { created_at: Date };
+type SortKey = "id" | "created_at" | "total_amount" | "status" | "customer" | "items";
+type SortDir = "asc" | "desc";
+
+function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
+  if (!active) return <ChevronsUpDown className="w-3.5 h-3.5 ml-1 opacity-40" />;
+  return dir === "asc"
+    ? <ChevronUp className="w-3.5 h-3.5 ml-1 text-primary" />
+    : <ChevronDown className="w-3.5 h-3.5 ml-1 text-primary" />;
+}
 
 const STATUS_COLORS: Record<string, string> = {
   pending:    "border-yellow-200 bg-yellow-50 text-yellow-700",
@@ -34,6 +45,8 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<SerializedOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<SortKey>("created_at");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [selected, setSelected] = useState<SerializedOrder | null>(null);
   const [saving, setSaving] = useState(false);
   const [trackingNum, setTrackingNum] = useState("");
@@ -78,15 +91,44 @@ export default function AdminOrdersPage() {
     setSaving(false);
   }
 
-  const filtered = orders.filter(o => {
+  function handleSort(key: SortKey) {
+    if (sortBy === key) {
+      setSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(key);
+      setSortDir(key === "created_at" ? "desc" : "asc");
+    }
+  }
+
+  const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return (
+    const matches = orders.filter(o =>
       o.id.toLowerCase().includes(q) ||
       o.user_id?.toLowerCase().includes(q) ||
       o.shipping_address?.city?.toLowerCase().includes(q) ||
       o.shipping_address?.line1?.toLowerCase().includes(q)
     );
-  });
+    return [...matches].sort((a, b) => {
+      let av: string | number, bv: string | number;
+      if (sortBy === "created_at") {
+        av = new Date(a.created_at).getTime();
+        bv = new Date(b.created_at).getTime();
+      } else if (sortBy === "total_amount") {
+        av = a.total_amount || 0;
+        bv = b.total_amount || 0;
+      } else if (sortBy === "items") {
+        av = a.items?.length ?? 0;
+        bv = b.items?.length ?? 0;
+      } else if (sortBy === "customer") {
+        av = (a.shipping_address?.city ?? a.user_id ?? "").toLowerCase();
+        bv = (b.shipping_address?.city ?? b.user_id ?? "").toLowerCase();
+      } else {
+        av = String(a[sortBy] ?? "").toLowerCase();
+        bv = String(b[sortBy] ?? "").toLowerCase();
+      }
+      return sortDir === "asc" ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
+    });
+  }, [orders, search, sortBy, sortDir]);
 
   return (
     <div className="space-y-8">
@@ -105,12 +147,20 @@ export default function AdminOrdersPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/30">
-              <TableHead className="font-bold">Order</TableHead>
-              <TableHead className="font-bold">Customer</TableHead>
-              <TableHead className="font-bold">Date</TableHead>
-              <TableHead className="font-bold">Items</TableHead>
-              <TableHead className="font-bold">Total</TableHead>
-              <TableHead className="font-bold">Status</TableHead>
+              {(["Order", "Customer", "Date", "Items", "Total", "Status"] as const).map((label) => {
+                const key: SortKey | null = label === "Order" ? "id" : label === "Customer" ? "customer" : label === "Date" ? "created_at" : label === "Items" ? "items" : label === "Total" ? "total_amount" : label === "Status" ? "status" : null;
+                return (
+                  <TableHead key={label}>
+                    {key ? (
+                      <button className="flex items-center font-bold hover:text-primary transition-colors whitespace-nowrap" onClick={() => handleSort(key)}>
+                        {label} <SortIcon active={sortBy === key} dir={sortDir} />
+                      </button>
+                    ) : (
+                      <span className="font-bold">{label}</span>
+                    )}
+                  </TableHead>
+                );
+              })}
               <TableHead />
             </TableRow>
           </TableHeader>

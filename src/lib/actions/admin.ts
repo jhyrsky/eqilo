@@ -223,6 +223,54 @@ export async function getOrders(): Promise<Order[]> {
   }
 }
 
+export async function getStoreSettings(): Promise<Record<string, unknown>> {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    const doc = await adminDb.collection("settings").doc("store").get();
+    return doc.exists ? (doc.data() as Record<string, unknown>) : {};
+  } catch (error) {
+    console.error("Error fetching store settings:", error);
+    return {};
+  }
+}
+
+export async function updateStoreSettings(data: Record<string, unknown>) {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    await adminDb.collection("settings").doc("store").set(data, { merge: true });
+    revalidatePath("/admin/settings");
+    return { success: true };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
+export async function getCustomers() {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    const snapshot = await adminDb.collection("customers").get();
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+}
+
+export async function updateCustomer(id: string, data: Partial<Pick<import("../types/firestore").Customer, 'email' | 'phone_number' | 'role' | 'business_id' | 'crm_notes'>>) {
+  try {
+    const isAdmin = await checkAdmin();
+    if (!isAdmin) throw new Error("Unauthorized");
+    await adminDb.collection("customers").doc(id).update({ ...data });
+    revalidatePath("/admin/customers");
+    return { success: true };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
 export async function updateOrder(id: string, data: Partial<Pick<Order, 'status' | 'tracking_number' | 'tracking_url' | 'courier'>>) {
   try {
     const isAdmin = await checkAdmin();

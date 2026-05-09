@@ -13,6 +13,18 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.eqilo.fi' }],
+        destination: 'https://eqilo.fi/:path*',
+        permanent: true,
+      },
+      { source: '/&', destination: '/', permanent: true },
+      { source: '/$', destination: '/', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

@@ -38,6 +38,9 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  alternates: {
+    canonical: 'https://eqilo.fi',
+  },
   openGraph: {
     title: 'Eqilo.fi - Modern Timekeeping Solutions',
     description: 'Eqilo provides modern timekeeping devices from Swiss manufacturer FDS Timing. Over 20 years of expertise for Finnish sport clubs.',
